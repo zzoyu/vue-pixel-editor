@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { useStore } from "../../stores";
 
 import BasePane from "../UI/BasePane.vue";
@@ -10,7 +9,8 @@ const store = useStore();
 <template>
   <BasePane>
     <template #title>PALETTE</template>
-    <h1>Hello, Palette!</h1>
+    <h3>{{ store.palette.name }}</h3>
+    <small>by {{ store.palette.author }}</small>
     <div class="grid grid-flow-row grid-cols-9 gap-1 max-w-fit">
       <PaletteItem
         v-for="(color, index) in store.palette"

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import Color from "../classes/color";
+import Palette from "../classes/palette";
 
 import ArcadeStandard29 from "../data/ARCADE_STANDARD_29.json";
 
@@ -9,11 +9,7 @@ export const useStore = defineStore("index", {
   // other options...
 
   state: () => {
-    const palette = [] as Array<Color>;
-
-    for (const color of ArcadeStandard29) {
-      palette.push(Color.fromHexString(color));
-    }
+    const palette = Palette.fromJSON(ArcadeStandard29);
 
     return {
       scale: 0,

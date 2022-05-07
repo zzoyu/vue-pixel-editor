@@ -13,6 +13,14 @@ export default class Color {
     this.a = 0;
   }
 
+  static fromHexArray(hexArray: Array<string>): Array<Color> {
+    const instances = Array<Color>();
+    for (const hex of hexArray) {
+      instances.push(this.fromHexString(hex));
+    }
+    return instances;
+  }
+
   static fromHexString(hex: string): Color {
     let instance = new Color();
     const tempHex = hex.replace("#", "");
