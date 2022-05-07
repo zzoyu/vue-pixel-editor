@@ -21,4 +21,21 @@ export const useStore = defineStore("index", {
       selectedColor: 0,
     };
   },
+
+  getters: {
+    currentColor: (state) => {
+      return state.palette[state.selectedPalette][state.selectedColor];
+    },
+    currentPalette: (state) => {
+      return state.palette[state.selectedPalette];
+    },
+    paletteNameList: (state) => state.palette.map((i) => i.name),
+  },
+
+  actions: {
+    updateSelectedPalette(index: number) {
+      this.selectedPalette = index;
+      this.selectedColor = 0;
+    },
+  },
 });
