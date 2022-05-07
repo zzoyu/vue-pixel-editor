@@ -1,13 +1,10 @@
 <script setup lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import { useStore } from "./stores";
 import TheBase from "./components/TheBase.vue";
 import TheSidebar from "./components/TheSidebar.vue";
 import TheToolbar from "./components/TheToolbar.vue";
 import ThePreview from "./components/ThePreview.vue";
-
-useStore();
 </script>
 
 <template>
