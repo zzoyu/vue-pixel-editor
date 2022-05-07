@@ -4,12 +4,14 @@ const isOpen = ref(true);
 </script>
 
 <template>
-  <div class="grid grid-cols-1 divide-y">
+  <div class="grid grid-cols-1 divide-y divide-slate-300">
     <div
       class="px-3 flex flex-row justify-between cursor-pointer"
       @click.self="isOpen = !isOpen"
     >
-      <h5 class="w-min"><slot name="title"></slot></h5>
+      <h5 class="w-min flex flex-row items-center">
+        <slot name="title"></slot>
+      </h5>
       <button v-if="isOpen">-</button>
       <button v-else>+</button>
     </div>

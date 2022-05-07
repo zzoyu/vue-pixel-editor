@@ -10,7 +10,7 @@ import TheLogo from "./TheLogo.vue";
     <TheLogo></TheLogo>
     <ThePalette></ThePalette>
     <TheLayer></TheLayer>
-    <button class="p-3 rounded-md border border-slate-200">Subscribe</button>
+    <button class="p-3 rounded-md border border-slate-300">Subscribe</button>
   </div>
 </template>
 
