@@ -17,7 +17,7 @@ const selectedPalette = computed({
     <template #title>
       PALETTE
       <div
-        class="mx-1 w-3 h-3 rounded outline outline-1 outline-slate-300"
+        class="mx-1 w-3 h-3 rounded ring-1 ring-slate-300"
         :style="{ backgroundColor: store.currentColor.hex }"
       ></div>
     </template>
@@ -34,7 +34,7 @@ const selectedPalette = computed({
       ></PaletteItem>
     </div>
     <select
-      class="mt-3 max-w-max border-0 outline outline-1 outline-slate-300 bg-slate-50"
+      class="mt-3 max-w-max border-none outline outline-1 outline-slate-300 bg-slate-50"
       v-model="selectedPalette"
     >
       <option
