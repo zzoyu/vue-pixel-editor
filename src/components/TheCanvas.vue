@@ -9,13 +9,24 @@ const canvas = ref<HTMLCanvasElement>();
 const render = () => {
   const ctx = canvas.value!.getContext("2d");
   if (!ctx) return;
-  ctx.fillStyle = "green";
-  ctx.fillRect(10, 10, 150, 100);
+  store.visibleLayerList.forEach((i) => i.render(ctx, store.scale));
 };
 
 const zoom = (event: WheelEvent) => {
   if (event.deltaY < 0) store.scale--;
   else store.scale++;
+};
+
+const drawPixel = (event: MouseEvent) => {
+  console.log(event);
+  const canvasPosition = (
+    event.target as HTMLCanvasElement
+  ).getBoundingClientRect();
+  store.drawPixel(
+    Math.floor((event.x - canvasPosition.left) / store.scale),
+    Math.floor((event.y - canvasPosition.top) / store.scale)
+  );
+  render();
 };
 onUpdated(render);
 onMounted(render);
@@ -38,6 +49,7 @@ onMounted(render);
     </div>
     <canvas
       ref="canvas"
+      @click="drawPixel"
       :width="store.canvasWidth"
       :height="store.canvasHeight"
       class="canvas"

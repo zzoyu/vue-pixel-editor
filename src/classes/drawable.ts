@@ -1,5 +1,5 @@
 import Pixel from "./pixel";
 
 export default abstract class Drawable {
-  abstract render(renderer: (pixel: Pixel) => void): void;
+  abstract render(context: CanvasRenderingContext2D, scale: number): void;
 }

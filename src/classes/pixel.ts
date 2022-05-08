@@ -11,9 +11,12 @@ export default class Pixel extends Drawable {
     this.color = color;
     this.x = x;
     this.y = y;
+    console.log("new pixel");
   }
 
-  render(renderer: (pixel: Pixel) => void) {
-    renderer(this);
+  render(context: CanvasRenderingContext2D, scale: number) {
+    console.log("render pixel");
+    context.fillStyle = this.color.hex;
+    context.fillRect(this.x * scale, this.y * scale, scale, scale);
   }
 }

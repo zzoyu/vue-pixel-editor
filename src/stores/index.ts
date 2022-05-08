@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { BackgroundType } from "../classes/backgroundType";
 import { Layer } from "../classes/layer";
 import Palette from "../classes/palette";
+import Pixel from "../classes/pixel";
 
 import ArcadeStandard29 from "../data/ARCADE_STANDARD_29.json";
 import PICO8 from "../data/PICO-8.json";
@@ -16,7 +17,8 @@ export const useStore = defineStore("index", {
     palette.push(Palette.fromJSON(ArcadeStandard29));
     palette.push(Palette.fromJSON(PICO8));
 
-    const layer = [new Layer()];
+    const layer: Array<Layer> = [];
+    layer.push(new Layer());
 
     return {
       scale: 32,
@@ -26,6 +28,7 @@ export const useStore = defineStore("index", {
       palette,
       selectedPalette: 0,
       selectedColor: 0,
+      selectedLayer: 0,
       layer,
     };
   },
@@ -43,6 +46,7 @@ export const useStore = defineStore("index", {
       state.layer.find((i) => i?.isVisible) ? true : false,
     canvasWidth: (state) => state.scale * state.width,
     canvasHeight: (state) => state.scale * state.height,
+    visibleLayerList: (state) => state.layer.filter((i) => i.isVisible),
   },
 
   actions: {
@@ -72,6 +76,12 @@ export const useStore = defineStore("index", {
         this.backgroundType === BackgroundType.white
           ? BackgroundType.transparent
           : this.backgroundType + 1;
+    },
+    drawPixel(x: number, y: number) {
+      console.log(this.layer);
+      this.layer[this.selectedLayer].addPixel(
+        new Pixel(this.currentColor, x, y)
+      );
     },
   },
 });

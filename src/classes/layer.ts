@@ -19,11 +19,22 @@ export class Layer extends Drawable {
     Layer.index++;
   }
 
-  render(renderer: (pixel: Pixel) => void): void {
+  addPixel(pixel: Pixel) {
+    const duplicatePixel = this.pixels.findIndex(
+      (i) => i.x === pixel.x && i.y === pixel.y
+    );
+    if (duplicatePixel >= 0) {
+      this.pixels[duplicatePixel] = pixel;
+      return;
+    }
+    this.pixels.push(pixel);
+  }
+
+  render(context: CanvasRenderingContext2D, scale: number): void {
     if (!this.isVisible) return;
 
     for (const pixel of this.pixels) {
-      pixel.render(renderer);
+      pixel.render(context, scale);
     }
   }
 
