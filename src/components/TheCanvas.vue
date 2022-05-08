@@ -13,12 +13,17 @@ const render = () => {
   ctx.fillRect(10, 10, 150, 100);
 };
 
+const zoom = (event: WheelEvent) => {
+  if (event.deltaY < 0) store.scale--;
+  else store.scale++;
+};
 onUpdated(render);
 onMounted(render);
 </script>
 
 <template>
   <div
+    @wheel="zoom"
     class="bg-white"
     :class="BackgroundType[store.backgroundType]"
     :width="store.canvasWidth"
@@ -29,7 +34,7 @@ onMounted(render);
     }"
   >
     <div class="absolute -mt-6">
-      <H1>x{{ store.scale }} {{ store.width }}*{{ store.height }}</H1>
+      <h1>x{{ store.scale }} {{ store.width }}*{{ store.height }}</h1>
     </div>
     <canvas
       ref="canvas"
