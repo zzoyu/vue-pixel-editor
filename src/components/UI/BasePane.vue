@@ -16,7 +16,7 @@ const props = defineProps({
         <slot name="title"></slot>
       </h5>
       <div class="flex flex-row items-center">
-        <div class="flex flex-row items-center mr-2">
+        <div class="grid grid-flow-col gap-1 mr-2">
           <slot name="button"></slot>
         </div>
         <button v-if="isOpen">-</button>
