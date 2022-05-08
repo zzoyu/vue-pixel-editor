@@ -1,22 +1,31 @@
 <script setup lang="ts">
-import { onMounted, onUpdated, ref, watch } from "vue";
+import { debounce } from "lodash";
+import { SubscriptionCallbackMutation } from "pinia";
+import { DebuggerEventExtraInfo, onMounted, onUpdated, ref, watch } from "vue";
 import { BackgroundType } from "../classes/backgroundType";
 import { useStore } from "../stores";
 
 const store = useStore();
 const canvas = ref<HTMLCanvasElement>();
 
-const render = () => {
+const render = debounce(() => {
   const ctx = canvas.value!.getContext("2d");
   if (!ctx) return;
-  ctx.clearRect(0, 0, canvas.value!.width, canvas.value!.height);
-  store.visibleLayerList.forEach((i) => i.render(ctx, store.scale));
-};
+  const buffer = document.createElement("canvas");
+  buffer.width = ctx.canvas.width;
+  buffer.height = ctx.canvas.height;
+  const bufferCtx = buffer.getContext("2d");
+  if (!bufferCtx) return;
+  store.visibleLayerList.forEach((i) => i.render(bufferCtx, store.scale));
+  ctx.drawImage(buffer, 0, 0);
+  // requestAnimationFrame(render);
+  // buffer.remove();
+}, 50);
 
-const zoom = (event: WheelEvent) => {
-  if (event.deltaY < 0) store.scale--;
-  else store.scale++;
-};
+const zoom = debounce((event: WheelEvent) => {
+  if (event.deltaY < 0) store.scale -= 2;
+  else store.scale += 2;
+}, 5);
 
 const drawPixel = (event: MouseEvent) => {
   console.log(event);
@@ -29,10 +38,12 @@ const drawPixel = (event: MouseEvent) => {
   );
   // render();
 };
-// onUpdated(render);
-// onMounted(render);
+onUpdated(render);
+onMounted(render);
 
-store.$subscribe(() => {
+store.$subscribe((event) => {
+  // console.log(event);
+  if ((event.events as DebuggerEventExtraInfo).key === "scale") return;
   console.log("subscribed");
   render();
 });
