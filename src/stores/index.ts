@@ -24,8 +24,8 @@ export const useStore = defineStore("index", {
 
     return {
       scale: 32,
-      width: 8,
-      height: 8,
+      width: 16,
+      height: 16,
       backgroundType: BackgroundType.checker,
       palette,
       selectedPalette: 0,
@@ -42,6 +42,8 @@ export const useStore = defineStore("index", {
     currentPalette: (state) => {
       return state.palette[state.selectedPalette];
     },
+    currentLayer: (state) =>
+      state.layer.find((i) => i.id === state.selectedLayer),
     paletteNameList: (state) => state.palette.map((i) => i.name),
     // 볼 수 있는 레이어가 하나라도 존재하면 참
     isLayerVisible: (state) =>
@@ -60,6 +62,7 @@ export const useStore = defineStore("index", {
     },
     addLayer() {
       this.layer.unshift(new Layer());
+      this.selectedLayer = this.layer[0].id;
     },
     deleteLayer(index: number) {
       this.layer.splice(index, 1);

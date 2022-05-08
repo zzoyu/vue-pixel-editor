@@ -30,6 +30,7 @@ const zoom = debounce((event: WheelEvent) => {
 }, 5);
 
 const drawPixel = (event: MouseEvent) => {
+  if (store.currentLayer?.isLocked) return;
   console.log(event);
   const canvasPosition = (
     event.target as HTMLCanvasElement
@@ -72,6 +73,7 @@ store.$subscribe((event) => {
       :width="store.canvasWidth"
       :height="store.canvasHeight"
       class="canvas"
+      :class="{ 'cursor-not-allowed': store.currentLayer?.isLocked }"
     ></canvas>
   </div>
 </template>
