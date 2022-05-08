@@ -9,10 +9,13 @@
   },
   "dependencies": {
     "@kfonts/neodgm-code": "^0.3.0",
-    "vue": "^3.2.25",
-    "pinia": "^2.0.13"
+    "lodash": "^4.17.21",
+    "pinia": "^2.0.13",
+    "vue": "^3.2.25"
   },
   "devDependencies": {
+    "@iconify/vue": "^3.2.1",
+    "@types/lodash": "^4.14.182",
     "@vitejs/plugin-vue": "^2.3.1",
     "autoprefixer": "^10.4.7",
     "postcss": "^8.4.13",
