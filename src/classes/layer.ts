@@ -7,6 +7,7 @@ export class Layer extends Drawable {
   isVisible: boolean;
   isLocked: boolean;
   name: string;
+  id: number;
   static index: number = 0;
 
   constructor(index: number = Layer.index + 1) {
@@ -16,6 +17,7 @@ export class Layer extends Drawable {
     this.isVisible = true;
     this.isLocked = false;
     this.name = `레이어 ${index}`;
+    this.id = index;
     Layer.index++;
   }
 

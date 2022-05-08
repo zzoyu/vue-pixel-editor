@@ -27,10 +27,12 @@ const store = useStore();
     <div class="divide-y divide-slate-300">
       <LayerItem
         v-for="(layer, index) in store.layer"
-        :key="layer.name"
+        :key="`${layer.id}`"
         :data="layer"
+        :is-selected="store.selectedLayer === layer.id"
         @delete-layer="store.deleteLayer(index)"
         @move-layer="(offset:number)=>store.exchangeLayerIndex(index, index + offset)"
+        @click="store.selectedLayer = layer.id"
       ></LayerItem>
     </div>
   </BasePane>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUpdated, ref } from "vue";
+import { onMounted, onUpdated, ref, watch } from "vue";
 import { BackgroundType } from "../classes/backgroundType";
 import { useStore } from "../stores";
 
@@ -9,6 +9,7 @@ const canvas = ref<HTMLCanvasElement>();
 const render = () => {
   const ctx = canvas.value!.getContext("2d");
   if (!ctx) return;
+  ctx.clearRect(0, 0, canvas.value!.width, canvas.value!.height);
   store.visibleLayerList.forEach((i) => i.render(ctx, store.scale));
 };
 
@@ -26,10 +27,15 @@ const drawPixel = (event: MouseEvent) => {
     Math.floor((event.x - canvasPosition.left) / store.scale),
     Math.floor((event.y - canvasPosition.top) / store.scale)
   );
-  render();
+  // render();
 };
-onUpdated(render);
-onMounted(render);
+// onUpdated(render);
+// onMounted(render);
+
+store.$subscribe(() => {
+  console.log("subscribed");
+  render();
+});
 </script>
 
 <template>

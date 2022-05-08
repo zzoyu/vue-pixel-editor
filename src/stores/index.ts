@@ -28,7 +28,7 @@ export const useStore = defineStore("index", {
       palette,
       selectedPalette: 0,
       selectedColor: 0,
-      selectedLayer: 0,
+      selectedLayer: layer[0].id,
       layer,
     };
   },
@@ -46,7 +46,9 @@ export const useStore = defineStore("index", {
       state.layer.find((i) => i?.isVisible) ? true : false,
     canvasWidth: (state) => state.scale * state.width,
     canvasHeight: (state) => state.scale * state.height,
-    visibleLayerList: (state) => state.layer.filter((i) => i.isVisible),
+    visibleLayerList: (state) =>
+      state.layer.filter((i) => i.isVisible).reverse(),
+    visibleLayerCount: (state) => state.layer.filter((i) => i.isVisible).length,
   },
 
   actions: {
@@ -59,6 +61,12 @@ export const useStore = defineStore("index", {
     },
     deleteLayer(index: number) {
       this.layer.splice(index, 1);
+    },
+    hideLayer(index: number) {
+      this.layer[index].show();
+    },
+    showLayer(index: number) {
+      this.layer[index].hide();
     },
     hideAll() {
       this.layer.forEach((i) => i.hide());
@@ -79,9 +87,9 @@ export const useStore = defineStore("index", {
     },
     drawPixel(x: number, y: number) {
       console.log(this.layer);
-      this.layer[this.selectedLayer].addPixel(
-        new Pixel(this.currentColor, x, y)
-      );
+      this.layer
+        .find((i) => i.id === this.selectedLayer)
+        ?.addPixel?.(new Pixel(this.currentColor, x, y));
     },
   },
 });

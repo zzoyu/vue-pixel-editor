@@ -13,6 +13,11 @@ defineProps({
     required: true,
     default: null,
   },
+  isSelected: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 const emit = defineEmits<{
   (event: "deleteLayer"): void;
@@ -41,6 +46,7 @@ const moveItem = debounce((event: MouseEvent) => {
   if (!isDragging.value) return;
 
   const rowRect = row.value?.getBoundingClientRect();
+  if (!rowRect) return;
 
   if (event.clientY > rowRect!.bottom) {
     emit(
@@ -69,14 +75,17 @@ watch(isEditing, () => {
     ref="row"
     :class="{ 'opacity-50 cursor-move': isDragging }"
   >
-    <button class="cursor-move" @mousedown="startMove">
+    <button class="cursor-move" @mousedown="startMove" @click.stop="">
       <Icon icon="pixelarticons:menu" />
     </button>
     <h3
       v-if="!isEditing"
       class="max-w-fit flex flex-row items-center"
-      :class="{ 'line-through': !data.isVisible }"
-      @click="!data.isLocked && (isEditing = true)"
+      :class="{
+        'line-through': !data.isVisible,
+        'font-extrabold underline': isSelected,
+      }"
+      @click.stop="!data.isLocked && (isEditing = true)"
     >
       {{ data.name
       }}<small v-if="data.isLocked"><Icon icon="pixelarticons:lock" /></small>
