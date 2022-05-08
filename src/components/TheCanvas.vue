@@ -1,19 +1,31 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, onUpdated, ref } from "vue";
 import { useStore } from "../stores";
 
 const store = useStore();
 const canvas = ref<HTMLCanvasElement>();
-onMounted(() => {
+
+const render = () => {
   const ctx = canvas.value!.getContext("2d");
   if (!ctx) return;
   ctx.fillStyle = "green";
   ctx.fillRect(10, 10, 150, 100);
-});
+};
+
+onUpdated(render);
+onMounted(render);
 </script>
 
 <template>
-  <div class="bg-white" :width="store.canvasWidth" :height="store.canvasHeight">
+  <div
+    class="bg-white base"
+    :width="store.canvasWidth"
+    :height="store.canvasHeight"
+    :style="{
+      backgroundSize: `${store.scale * 2}px ${store.scale * 2}px`,
+      backgroundPosition: `0 0, ${store.scale}px 0, ${store.scale}px -${store.scale}px, 0px ${store.scale}px`,
+    }"
+  >
     <div class="absolute -mt-6">
       <H1>x{{ store.scale }} {{ store.width }}*{{ store.height }}</H1>
     </div>
@@ -26,4 +38,13 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.base {
+  background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),
+    linear-gradient(135deg, #ccc 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #ccc 75%),
+    linear-gradient(135deg, transparent 75%, #ccc 75%);
+  background-size: 25px 25px; /* Must be a square */
+  background-position: 0 0, 12.5px 0, 12.5px -12.5px, 0px 12.5px; /* Must be half of one side of the square */
+}
+</style>

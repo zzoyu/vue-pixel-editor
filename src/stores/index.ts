@@ -18,9 +18,9 @@ export const useStore = defineStore("index", {
     const layer = [new Layer()];
 
     return {
-      scale: 15,
-      width: 32,
-      height: 32,
+      scale: 30,
+      width: 8,
+      height: 8,
       palette,
       selectedPalette: 0,
       selectedColor: 0,
