@@ -14,8 +14,8 @@ const selectedPalette = computed({
 
 <template>
   <BasePane>
-    <template #title>
-      PALETTE
+    <template #title
+      >︎PALETTE
       <div
         class="mx-1 w-3 h-3 rounded ring-1 ring-slate-300"
         :style="{ backgroundColor: store.currentColor.hex }"

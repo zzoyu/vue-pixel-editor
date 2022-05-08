@@ -3,15 +3,32 @@ import { ref } from "vue";
 import ThePalette from "./sidebar/ThePalette.vue";
 import TheLayer from "./sidebar/TheLayer.vue";
 import TheLogo from "./TheLogo.vue";
+
+const isShow = ref(true);
 </script>
 
 <template>
-  <div class="float-left drop-shadow-lg w-48 h-full py-4 bg-slate-50 rounded">
+  <div
+    class="float-left drop-shadow-lg w-48 h-full py-4 bg-slate-50 rounded transition-all absolute left-0"
+    :class="{ 'absolute -left-48': !isShow }"
+  >
+    <button
+      v-if="isShow"
+      class="p-3 absolute right-0 top-0"
+      @click="isShow = !isShow"
+    >
+      {{ "<" }}
+    </button>
+    <button
+      v-else
+      class="p-3 absolute -right-8 top-0 bg-slate-50 rounded"
+      @click="isShow = !isShow"
+    >
+      {{ ">" }}
+    </button>
     <TheLogo></TheLogo>
     <ThePalette></ThePalette>
-    <TheLayer></TheLayer>
-    <button class="p-3 rounded-md border border-slate-300">Subscribe</button>
+    <TheLayer :is-padded="false"></TheLayer>
+    <!-- <button class="p-3 rounded-md border border-slate-300">Subscribe</button> -->
   </div>
 </template>
-
-<style scoped></style>
