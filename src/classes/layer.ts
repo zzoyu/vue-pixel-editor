@@ -6,13 +6,15 @@ export class Layer extends Drawable {
   opacity: number;
   isVisible: boolean;
   isLocked: boolean;
+  name: string;
 
-  constructor() {
+  constructor(index: number = 1) {
     super();
     this.pixels = new Array<Pixel>();
     this.opacity = 100;
     this.isVisible = true;
     this.isLocked = false;
+    this.name = `레이어 ${index}`;
   }
 
   render(renderer: (pixel: Pixel) => void): void {
