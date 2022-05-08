@@ -18,7 +18,9 @@ export const useStore = defineStore("index", {
     const layer = [new Layer()];
 
     return {
-      scale: 0,
+      scale: 15,
+      width: 32,
+      height: 32,
       palette,
       selectedPalette: 0,
       selectedColor: 0,
@@ -37,6 +39,8 @@ export const useStore = defineStore("index", {
     // 볼 수 있는 레이어가 하나라도 존재하면 참
     isLayerVisible: (state) =>
       state.layer.find((i) => i?.isVisible) ? true : false,
+    canvasWidth: (state) => state.scale * state.width,
+    canvasHeight: (state) => state.scale * state.height,
   },
 
   actions: {

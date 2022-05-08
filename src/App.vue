@@ -8,10 +8,10 @@ import ThePreview from "./components/ThePreview.vue";
 </script>
 
 <template>
-  <TheSidebar></TheSidebar>
-  <TheBase></TheBase>
   <TheToolbar></TheToolbar>
+  <TheBase></TheBase>
   <ThePreview></ThePreview>
+  <TheSidebar></TheSidebar>
 </template>
 
 <style>
@@ -25,6 +25,7 @@ import ThePreview from "./components/ThePreview.vue";
   width: 100%;
   height: 100%;
   /* margin-top: 60px; */
+  display: grid;
 }
 html,
 body {
