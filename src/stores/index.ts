@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { BackgroundType } from "../classes/backgroundType";
 import { Layer } from "../classes/layer";
 import Palette from "../classes/palette";
 
@@ -21,6 +22,7 @@ export const useStore = defineStore("index", {
       scale: 32,
       width: 8,
       height: 8,
+      backgroundType: BackgroundType.checker,
       palette,
       selectedPalette: 0,
       selectedColor: 0,
@@ -64,6 +66,12 @@ export const useStore = defineStore("index", {
       if (from === to || from < 0 || to < 0) return;
       const [temp] = this.layer.splice(from, 1);
       this.layer.splice(to, 0, temp);
+    },
+    changeBackground() {
+      this.backgroundType =
+        this.backgroundType === BackgroundType.white
+          ? BackgroundType.transparent
+          : this.backgroundType + 1;
     },
   },
 });

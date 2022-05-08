@@ -9,7 +9,7 @@ const store = useStore();
     <div
       class="drop-shadow-lg h-10 py-4 px-4 bg-slate-50 rounded items-center justify-center gap-2 grid grid-flow-col"
     >
-      <button>
+      <button @click="store.changeBackground()">
         <Icon icon="pixelarticons:grid" />
       </button>
       <button @click="store.scale++">

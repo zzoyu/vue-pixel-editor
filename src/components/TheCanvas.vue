@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUpdated, ref } from "vue";
+import { BackgroundType } from "../classes/backgroundType";
 import { useStore } from "../stores";
 
 const store = useStore();
@@ -18,7 +19,8 @@ onMounted(render);
 
 <template>
   <div
-    class="bg-white base"
+    class="bg-white"
+    :class="BackgroundType[store.backgroundType]"
     :width="store.canvasWidth"
     :height="store.canvasHeight"
     :style="{
@@ -39,12 +41,20 @@ onMounted(render);
 </template>
 
 <style scoped>
-.base {
+.checker {
   background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),
     linear-gradient(135deg, #ccc 25%, transparent 25%),
     linear-gradient(45deg, transparent 75%, #ccc 75%),
     linear-gradient(135deg, transparent 75%, #ccc 75%);
   background-size: 25px 25px; /* Must be a square */
   background-position: 0 0, 12.5px 0, 12.5px -12.5px, 0px 12.5px; /* Must be half of one side of the square */
+}
+
+.white {
+  background: white;
+}
+
+.transparent {
+  background: transparent;
 }
 </style>
