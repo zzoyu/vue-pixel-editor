@@ -18,7 +18,7 @@ export const useStore = defineStore("index", {
     const layer = [new Layer()];
 
     return {
-      scale: 30,
+      scale: 32,
       width: 8,
       height: 8,
       palette,
