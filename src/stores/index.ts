@@ -6,6 +6,7 @@ import Pixel from "../classes/pixel";
 
 import ArcadeStandard29 from "../data/ARCADE_STANDARD_29.json";
 import PICO8 from "../data/PICO-8.json";
+import DB32 from "../data/DB32.json";
 
 // useStore could be anything like useUser, useCart
 // the first argument is a unique id of the store across your application
@@ -16,6 +17,7 @@ export const useStore = defineStore("index", {
     const palette = new Array<Palette>();
     palette.push(Palette.fromJSON(ArcadeStandard29));
     palette.push(Palette.fromJSON(PICO8));
+    palette.push(Palette.fromJSON(DB32));
 
     const layer: Array<Layer> = [];
     layer.push(new Layer());

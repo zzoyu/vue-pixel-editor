@@ -38,6 +38,14 @@ export default class Color {
     return instance;
   }
 
+  static fromRGBAArray(colors: Array<Array<number>>) {
+    const instances = Array<Color>();
+    for (const rgb of colors) {
+      instances.push(this.fromRGBANumber(rgb[0], rgb[1], rgb[2]));
+    }
+    return instances;
+  }
+
   static fromRGBANumber(
     r: number,
     g: number,
