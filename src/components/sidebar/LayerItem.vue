@@ -87,6 +87,7 @@ watch(isEditing, () => {
       type="text"
       class="w-20"
       @blur="isEditing = false"
+      @keypress.enter="isEditing = false"
       v-model.lazy="data.name"
     />
     <div class="grid grid-flow-col gap-1 items-center">
