@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { nextTick, ref, watch } from "vue";
 import { Layer } from "../../classes/layer";
 import { Icon } from "@iconify/vue";
 import debounce from "lodash/debounce";
 
 const isDragging = ref(false);
+const isEditing = ref(false);
 
 defineProps({
   data: {
@@ -55,6 +56,11 @@ const moveItem = debounce((event: MouseEvent) => {
 }, 10);
 
 const row = ref<HTMLElement>();
+const editbox = ref<HTMLInputElement>();
+
+watch(isEditing, () => {
+  nextTick(() => editbox.value?.focus?.());
+});
 </script>
 
 <template>
@@ -67,12 +73,22 @@ const row = ref<HTMLElement>();
       <Icon icon="pixelarticons:menu" />
     </button>
     <h3
+      v-if="!isEditing"
       class="max-w-fit flex flex-row items-center"
       :class="{ 'line-through': !data.isVisible }"
+      @click="!data.isLocked && (isEditing = true)"
     >
       {{ data.name
       }}<small v-if="data.isLocked"><Icon icon="pixelarticons:lock" /></small>
     </h3>
+    <input
+      v-else
+      ref="editbox"
+      type="text"
+      class="w-20"
+      @blur="isEditing = false"
+      v-model.lazy="data.name"
+    />
     <div class="grid grid-flow-col gap-1 items-center">
       <button v-if="data.isVisible" @click.stop="data.hide()">
         <Icon icon="pixelarticons:eye" />
