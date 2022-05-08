@@ -13,6 +13,9 @@ const store = useStore();
   <BasePane>
     <template #title>LAYER</template>
     <template #button>
+      <button @click.stop="store.addLayer()">
+        <Icon icon="pixelarticons:add-box" />
+      </button>
       <button v-if="store.isLayerVisible" @click.stop="store.hideAll()">
         <Icon icon="pixelarticons:eye" />
       </button>

@@ -16,10 +16,6 @@ export const useStore = defineStore("index", {
     palette.push(Palette.fromJSON(PICO8));
 
     const layer = [new Layer()];
-    layer.push(new Layer(2));
-    layer.push(new Layer(3));
-    layer.push(new Layer(4));
-    layer.push(new Layer(5));
 
     return {
       scale: 0,
@@ -47,6 +43,9 @@ export const useStore = defineStore("index", {
     updateSelectedPalette(index: number) {
       this.selectedPalette = index;
       this.selectedColor = 0;
+    },
+    addLayer() {
+      this.layer.unshift(new Layer());
     },
     deleteLayer(index: number) {
       this.layer.splice(index, 1);
