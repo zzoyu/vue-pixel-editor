@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 import { DebuggerEventExtraInfo, onMounted, onUpdated, ref } from "vue";
 import { BackgroundType } from "../classes/backgroundType";
 import { useStore } from "../stores";
 
 const store = useStore();
 const canvas = ref<HTMLCanvasElement>();
+const lastPoint = ref<{ x: number; y: number }>();
 
 const render = debounce(() => {
   const ctx = canvas.value!.getContext("2d");
@@ -35,11 +36,26 @@ const drawPixel = (event: MouseEvent) => {
   const canvasPosition = (
     event.target as HTMLCanvasElement
   ).getBoundingClientRect();
-  store.drawPixel(
-    Math.floor((event.x - canvasPosition.left) / store.scale),
-    Math.floor((event.y - canvasPosition.top) / store.scale)
-  );
+
+  const x = Math.floor((event.x - canvasPosition.left) / store.scale);
+  const y = Math.floor((event.y - canvasPosition.top) / store.scale);
+
+  if (lastPoint.value?.x === x && lastPoint.value?.y === y) return;
+
+  store.drawPixel(x, y);
+  lastPoint.value = { x, y };
   // render();
+};
+
+const moveDraw = (event: MouseEvent) => {
+  if (lastPoint.value?.x === undefined && lastPoint.value?.y === undefined) {
+    return;
+  }
+  drawPixel(event);
+};
+
+const resetDraw = () => {
+  lastPoint.value = undefined;
 };
 onUpdated(render);
 onMounted(render);
@@ -67,9 +83,13 @@ store.$subscribe((event) => {
     <div class="absolute -mt-6">
       <h1>x{{ store.scale }} {{ store.width }}*{{ store.height }}</h1>
     </div>
+    <!-- @click="drawPixel" -->
     <canvas
       ref="canvas"
-      @click="drawPixel"
+      @mousedown="drawPixel"
+      @mousemove="moveDraw"
+      @mouseleave="resetDraw"
+      @mouseup="resetDraw"
       :width="store.canvasWidth"
       :height="store.canvasHeight"
       class="canvas"

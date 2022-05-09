@@ -9,8 +9,8 @@ const isShow = ref(true);
 
 <template>
   <div
-    class="float-left drop-shadow-lg w-48 h-full py-4 bg-slate-50 rounded transition-all absolute left-0"
-    :class="{ 'absolute -left-48': !isShow }"
+    class="drop-shadow-lg w-48 py-4 bg-slate-50 rounded transition-all flex-col flex-shrink-0 items-stretch"
+    :class="{ '-ml-48': !isShow }"
   >
     <button
       v-if="isShow"
