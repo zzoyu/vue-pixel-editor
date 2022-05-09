@@ -21,7 +21,7 @@ const render = debounce(() => {
   // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   ctx.canvas.width = ctx.canvas.width;
   ctx.drawImage(buffer, 0, 0);
-  // requestAnimationFrame(render);
+  requestAnimationFrame(render);
   // buffer.remove();
 }, 50);
 
@@ -60,12 +60,12 @@ const resetDraw = () => {
 onUpdated(render);
 onMounted(render);
 
-store.$subscribe((event) => {
-  // console.log(event);
-  if ((event.events as DebuggerEventExtraInfo).key === "scale") return;
-  console.log("subscribed");
-  render();
-});
+// store.$subscribe((event) => {
+// console.log(event);
+// if ((event.events as DebuggerEventExtraInfo).key === "scale") return;
+// console.log("subscribed");
+// render();
+// });
 </script>
 
 <template>
