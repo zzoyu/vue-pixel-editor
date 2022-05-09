@@ -29,7 +29,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - run: npm run build --base=/${{ github.event.repository.name }}/
+    - run: npm run build -- --base=/${{ github.event.repository.name }}/
     - name: Push to GitHub Pages branch
       uses: ftnext/action-push-ghpages@v1.0.0
       with:
