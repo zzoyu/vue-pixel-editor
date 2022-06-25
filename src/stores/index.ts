@@ -73,14 +73,26 @@ export const useStore = defineStore("index", {
 
   actions: {
     initializeCommand() {
-      const drawPen = (position: { x: number; y: number }) => {
+      const handleDraw = (
+        position: { x: number; y: number },
+        drawFunction: (x: number, y: number) => void
+      ) => {
         const x = Math.floor(position.x / this.scale);
         const y = Math.floor(position.y / this.scale);
 
         if (x < 0 || x >= this.width || y < 0 || y >= this.height) return;
 
-        this.drawPixel(x, y);
+        drawFunction(x, y);
       };
+
+      const drawPen = (position: { x: number; y: number }) => {
+        handleDraw(position, this.drawPixel);
+      };
+
+      const erasePen = (position: { x: number; y: number }) => {
+        handleDraw(position, this.erasePixel);
+      };
+
       this.command.push(
         new Command({
           name: "펜",
@@ -97,9 +109,9 @@ export const useStore = defineStore("index", {
           name: "지우개",
           icon: "layout-sidebar-left",
           commandable: {
-            clickStart: () => {},
+            clickStart: erasePen,
             clickEnd: () => {},
-            drag: () => {},
+            drag: erasePen,
           },
         })
       );
@@ -210,10 +222,10 @@ export const useStore = defineStore("index", {
           : this.backgroundType + 1;
     },
     drawPixel(x: number, y: number) {
-      // console.log(this.layer);
-      this.layer
-        .find((i) => i.id === this.selectedLayer)
-        ?.addPixel?.(new Pixel(this.currentColor, x, y));
+      this.currentLayer?.addPixel?.(new Pixel(this.currentColor, x, y));
+    },
+    erasePixel(x: number, y: number) {
+      this.currentLayer?.removePixel?.(x, y);
     },
   },
 });
