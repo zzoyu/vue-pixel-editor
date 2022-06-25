@@ -18,8 +18,8 @@ export class Layer extends Drawable {
 
     // 캔버스 크기만큼 레이어 생성
     this.pixels = new Array<Array<Pixel | null>>(size.height)
-      .fill(null)
-      .map(() => new Array<Pixel | null>(size.width));
+      .fill([])
+      .map(() => new Array<Pixel | null>(size.width).fill(null));
     // console.log(this.pixels);
     this.opacity = 100;
     this.isVisible = true;
@@ -40,7 +40,7 @@ export class Layer extends Drawable {
     if (removeWidth !== 0) {
       for (const row of this.pixels) {
         if (removeWidth) row.splice(row.length - 1, -removeWidth);
-        else row.push(new Array<Pixel | null>(Math.abs(removeWidth)));
+        else row.push(...new Array<Pixel | null>(Math.abs(removeWidth)));
       }
     }
 
@@ -48,9 +48,9 @@ export class Layer extends Drawable {
       this.pixels.splice(this.pixels.length - 1 - removeHeight, removeHeight);
     } else if (removeHeight < 0) {
       this.pixels.push(
-        new Array<Array<Pixel | null>>(Math.abs(removeHeight))
-          .fill(null)
-          .map(() => new Array<Pixel | null>(width))
+        ...new Array<Array<Pixel | null>>(Math.abs(removeHeight))
+          .fill([])
+          .map(() => new Array<Pixel | null>(width).fill(null))
       );
     }
   }
