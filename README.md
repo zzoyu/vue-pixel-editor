@@ -1,4 +1,4 @@
-# Pixel editor
+# Pixel editor [![CI](https://github.com/zzoyu/vue-pixel-editor/actions/workflows/main.yml/badge.svg)](https://github.com/zzoyu/vue-pixel-editor/actions/workflows/main.yml) [![pages-build-deployment](https://github.com/zzoyu/vue-pixel-editor/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/zzoyu/vue-pixel-editor/actions/workflows/pages/pages-build-deployment)
 
 Vue 3 + TypeScript + Vite + Pinia + TailwindCSS 기반의 픽셀 에디터입니다.
 레트로 풍의 게임 개발에 사용되는 스프라이트 작업을 위하여 제작하고 있습니다.
