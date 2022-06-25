@@ -21,18 +21,24 @@ const render = debounce(() => {
   // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   ctx.canvas.width = ctx.canvas.width;
   ctx.drawImage(buffer, 0, 0);
-  const tempPosition = calculateRelativePosition(
-    cursorPosition.value as MouseEvent
-  );
 
   if (store.currentCommand.isDrawable) {
     ctx.fillStyle = store.currentColor.hex;
-    ctx.fillRect(
-      tempPosition.x - (tempPosition.x % store.scale),
-      tempPosition.y - (tempPosition.y % store.scale),
-      store.scale,
-      store.scale
+    const tempPosition = calculateRelativePosition(
+      cursorPosition.value as MouseEvent
     );
+    if (
+      tempPosition.x >= 0 &&
+      tempPosition.x < ctx.canvas.width &&
+      tempPosition.y >= 0 &&
+      tempPosition.y < ctx.canvas.height
+    )
+      ctx.fillRect(
+        tempPosition.x - (tempPosition.x % store.scale),
+        tempPosition.y - (tempPosition.y % store.scale),
+        store.scale,
+        store.scale
+      );
   }
 
   requestAnimationFrame(render);
