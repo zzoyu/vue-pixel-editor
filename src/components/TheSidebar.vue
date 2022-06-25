@@ -14,21 +14,23 @@ const isShow = ref(true);
   >
     <button
       v-if="isShow"
-      class="p-3 absolute right-0 top-0"
+      class="p-3 absolute top-0 left-48 -translate-x-full"
       @click="isShow = !isShow"
     >
       {{ "<" }}
     </button>
-    <button
-      v-else
-      class="p-3 absolute -right-8 top-0 bg-slate-50 rounded"
-      @click="isShow = !isShow"
-    >
-      {{ ">" }}
-    </button>
+
     <TheLogo></TheLogo>
     <ThePalette></ThePalette>
     <TheLayer :is-padded="false"></TheLayer>
     <!-- <button class="p-3 rounded-md border border-slate-300">Subscribe</button> -->
   </div>
+
+  <button
+    v-if="!isShow"
+    class="p-3 absolute left-0 top-0 bg-slate-50 rounded"
+    @click="isShow = !isShow"
+  >
+    {{ ">" }}
+  </button>
 </template>

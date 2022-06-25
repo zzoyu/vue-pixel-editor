@@ -27,6 +27,7 @@ import ThePreview from "./components/ThePreview.vue";
   /* margin-top: 60px; */
   display: flex;
   flex-direction: row;
+  overflow-y: hidden;
 }
 html,
 body {
