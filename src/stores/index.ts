@@ -37,6 +37,7 @@ export const useStore = defineStore("index", {
       selectedColor: 0,
       selectedLayer: layer[0].id,
       layer,
+      isTotalLayerVisible: true,
       currentCommandIndex,
       command,
     };
@@ -52,13 +53,18 @@ export const useStore = defineStore("index", {
     currentLayer: (state) =>
       state.layer.find((i) => i.id === state.selectedLayer),
     paletteNameList: (state) => state.palette.map((i) => i.name),
-    // 볼 수 있는 레이어가 하나라도 존재하면 참
-    isLayerVisible: (state) =>
-      state.layer.find((i) => i?.isVisible) ? true : false,
+    // // 볼 수 있는 레이어가 하나라도 존재하면 참
+    // isLayerVisible: (state) => {
+    //   if (!state.isTotalLayerVisible) return false;
+    //   if (state.layer.length === 0) return state.isTotalLayerVisible;
+    //   return state.layer.find((i) => i?.isVisible) ? true : false;
+    // },
     canvasWidth: (state) => state.scale * state.width,
     canvasHeight: (state) => state.scale * state.height,
     visibleLayerList: (state) =>
-      state.layer.filter((i) => i.isVisible).reverse(),
+      state.isTotalLayerVisible
+        ? state.layer.filter((i) => i.isVisible).reverse()
+        : [],
     visibleLayerCount: (state) => state.layer.filter((i) => i.isVisible).length,
   },
 
@@ -182,10 +188,12 @@ export const useStore = defineStore("index", {
       this.layer[index].hide();
     },
     hideAll() {
-      this.layer.forEach((i) => i.hide());
+      this.isTotalLayerVisible = false;
+      // this.layer.forEach((i) => i.hide());
     },
     showAll() {
-      this.layer.forEach((i) => i.show());
+      this.isTotalLayerVisible = true;
+      // this.layer.forEach((i) => i.show());
     },
     exchangeLayerIndex(from: number, to: number) {
       if (from === to || from < 0 || to < 0) return;

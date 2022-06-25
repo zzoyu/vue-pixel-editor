@@ -16,7 +16,7 @@ const store = useStore();
       <button @click.stop="store.addLayer()">
         <Icon icon="pixelarticons:add-box" />
       </button>
-      <button v-if="store.isLayerVisible" @click.stop="store.hideAll()">
+      <button v-if="store.isTotalLayerVisible" @click.stop="store.hideAll()">
         <Icon icon="pixelarticons:eye" />
       </button>
       <button v-else @click.stop="store.showAll()">

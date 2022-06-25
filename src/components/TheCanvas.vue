@@ -51,6 +51,7 @@ const handleMouseUp = (event: MouseEvent) => {
 };
 
 const handleClick = (event: MouseEvent) => {
+  if (!store.currentLayer?.isVisible || !store.isTotalLayerVisible) return;
   store.command[store.currentCommandIndex].clickStart?.(
     calculateRelativePosition(event)
   );
