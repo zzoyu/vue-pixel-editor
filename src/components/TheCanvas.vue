@@ -6,7 +6,7 @@ import { useStore } from "../stores";
 
 const store = useStore();
 const canvas = ref<HTMLCanvasElement>();
-// const lastPoint = ref<{ x: number; y: number }>();
+const cursorPosition = ref<{ x: number; y: number }>({ x: 0, y: 0 });
 
 const render = debounce(() => {
   const ctx = canvas.value!.getContext("2d");
@@ -21,6 +21,20 @@ const render = debounce(() => {
   // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   ctx.canvas.width = ctx.canvas.width;
   ctx.drawImage(buffer, 0, 0);
+  const tempPosition = calculateRelativePosition(
+    cursorPosition.value as MouseEvent
+  );
+
+  if (store.currentCommand.isDrawable) {
+    ctx.fillStyle = store.currentColor.hex;
+    ctx.fillRect(
+      tempPosition.x - (tempPosition.x % store.scale),
+      tempPosition.y - (tempPosition.y % store.scale),
+      store.scale,
+      store.scale
+    );
+  }
+
   requestAnimationFrame(render);
   // buffer.remove();
 }, 50);
@@ -58,6 +72,13 @@ const handleClick = (event: MouseEvent) => {
   document.addEventListener("mousemove", handleMouseMove);
   document.addEventListener("mouseup", handleMouseUp);
 };
+
+document.addEventListener(
+  "mousemove",
+  debounce((event: MouseEvent) => {
+    cursorPosition.value = { x: event?.x ?? 0, y: event?.y ?? 0 };
+  }, 5)
+);
 
 onUpdated(render);
 onMounted(render);
