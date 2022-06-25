@@ -47,6 +47,7 @@ export const useStore = defineStore("index", {
   },
 
   getters: {
+    currentCommand: (state) => state.command[state.currentCommandIndex],
     currentColor: (state) => {
       return state.palette[state.selectedPalette][state.selectedColor];
     },
@@ -97,6 +98,8 @@ export const useStore = defineStore("index", {
         new Command({
           name: "펜",
           icon: "edit",
+          cursor:
+            "url('https://api.iconify.design/pixelarticons/edit.svg') 0 16, auto",
           commandable: {
             clickStart: drawPen,
             clickEnd: () => {},
@@ -108,6 +111,9 @@ export const useStore = defineStore("index", {
         new Command({
           name: "지우개",
           icon: "layout-sidebar-left",
+          cursor:
+            "url('https://api.iconify.design/pixelarticons/layout-sidebar-left.svg') 0 8, auto",
+          isDrawable: false,
           commandable: {
             clickStart: erasePen,
             clickEnd: () => {},
@@ -119,6 +125,7 @@ export const useStore = defineStore("index", {
         new Command({
           name: "직선(구현X)",
           icon: "minus",
+          cursor: "crosshair",
           commandable: {
             clickStart: () => {},
             clickEnd: () => {},
@@ -130,6 +137,7 @@ export const useStore = defineStore("index", {
         new Command({
           name: "직사각형(구현X)",
           icon: "checkbox-on",
+          cursor: "crosshair",
           commandable: {
             clickStart: () => {},
             clickEnd: () => {},
@@ -141,6 +149,7 @@ export const useStore = defineStore("index", {
         new Command({
           name: "원(구현X)",
           icon: "circle",
+          cursor: "crosshair",
           commandable: {
             clickStart: () => {},
             clickEnd: () => {},
@@ -151,7 +160,9 @@ export const useStore = defineStore("index", {
       this.command.push(
         new Command({
           name: "채우기(구현X)",
-          icon: "fill",
+          icon: "fill-half",
+          cursor:
+            "url('https://api.iconify.design/pixelarticons/fill-half.svg') 16 16, auto",
           commandable: {
             clickStart: () => {},
             clickEnd: () => {},
@@ -163,6 +174,8 @@ export const useStore = defineStore("index", {
         new Command({
           name: "영역 선택(구현X)",
           icon: "section",
+          cursor: "crosshair",
+          isDrawable: false,
           commandable: {
             clickStart: () => {},
             clickEnd: () => {},
@@ -174,6 +187,8 @@ export const useStore = defineStore("index", {
         new Command({
           name: "이동(구현X)",
           icon: "move",
+          cursor: "move",
+          isDrawable: false,
           commandable: {
             clickStart: () => {},
             clickEnd: () => {},
