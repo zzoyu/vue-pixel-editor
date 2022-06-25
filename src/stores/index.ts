@@ -105,7 +105,7 @@ export const useStore = defineStore("index", {
       );
       this.command.push(
         new Command({
-          name: "직선",
+          name: "직선(구현X)",
           icon: "minus",
           commandable: {
             clickStart: () => {},
@@ -116,7 +116,7 @@ export const useStore = defineStore("index", {
       );
       this.command.push(
         new Command({
-          name: "직사각형",
+          name: "직사각형(구현X)",
           icon: "checkbox-on",
           commandable: {
             clickStart: () => {},
@@ -127,7 +127,7 @@ export const useStore = defineStore("index", {
       );
       this.command.push(
         new Command({
-          name: "원",
+          name: "원(구현X)",
           icon: "circle",
           commandable: {
             clickStart: () => {},
@@ -138,7 +138,7 @@ export const useStore = defineStore("index", {
       );
       this.command.push(
         new Command({
-          name: "채우기",
+          name: "채우기(구현X)",
           icon: "fill",
           commandable: {
             clickStart: () => {},
@@ -149,7 +149,7 @@ export const useStore = defineStore("index", {
       );
       this.command.push(
         new Command({
-          name: "영역 선택",
+          name: "영역 선택(구현X)",
           icon: "section",
           commandable: {
             clickStart: () => {},
@@ -160,7 +160,7 @@ export const useStore = defineStore("index", {
       );
       this.command.push(
         new Command({
-          name: "이동",
+          name: "이동(구현X)",
           icon: "move",
           commandable: {
             clickStart: () => {},
