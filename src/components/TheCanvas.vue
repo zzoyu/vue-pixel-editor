@@ -6,7 +6,7 @@ import { useStore } from "../stores";
 
 const store = useStore();
 const canvas = ref<HTMLCanvasElement>();
-const lastPoint = ref<{ x: number; y: number }>();
+// const lastPoint = ref<{ x: number; y: number }>();
 
 const render = debounce(() => {
   const ctx = canvas.value!.getContext("2d");
@@ -30,42 +30,36 @@ const zoom = debounce((event: WheelEvent) => {
   else store.scale += 2;
 }, 5);
 
-const drawPixel = (event: MouseEvent) => {
-  if (store.currentLayer?.isLocked) return;
-  console.log(event);
-  const canvasPosition = (
-    event.target as HTMLCanvasElement
-  ).getBoundingClientRect();
+const calculateRelativePosition = (
+  event: MouseEvent
+): { x: number; y: number } => {
+  const rectCanvas = canvas.value!.getClientRects()?.[0];
 
-  const x = Math.floor((event.x - canvasPosition.left) / store.scale);
-  const y = Math.floor((event.y - canvasPosition.top) / store.scale);
-
-  if (lastPoint.value?.x === x && lastPoint.value?.y === y) return;
-
-  store.drawPixel(x, y);
-  lastPoint.value = { x, y };
-  // render();
+  return { x: event.x - rectCanvas.x, y: event.y - rectCanvas.y };
+};
+const handleMouseMove = (event: MouseEvent) => {
+  store.command[store.currentCommandIndex].drag?.(
+    calculateRelativePosition(event)
+  );
+};
+const handleMouseUp = (event: MouseEvent) => {
+  store.command[store.currentCommandIndex].clickEnd?.(
+    calculateRelativePosition(event)
+  );
+  document.removeEventListener("mousemove", handleMouseMove);
+  document.removeEventListener("mouseup", handleMouseUp);
 };
 
-const moveDraw = (event: MouseEvent) => {
-  if (lastPoint.value?.x === undefined && lastPoint.value?.y === undefined) {
-    return;
-  }
-  drawPixel(event);
+const handleClick = (event: MouseEvent) => {
+  store.command[store.currentCommandIndex].clickStart?.(
+    calculateRelativePosition(event)
+  );
+  document.addEventListener("mousemove", handleMouseMove);
+  document.addEventListener("mouseup", handleMouseUp);
 };
 
-const resetDraw = () => {
-  lastPoint.value = undefined;
-};
 onUpdated(render);
 onMounted(render);
-
-// store.$subscribe((event) => {
-// console.log(event);
-// if ((event.events as DebuggerEventExtraInfo).key === "scale") return;
-// console.log("subscribed");
-// render();
-// });
 </script>
 
 <template>
@@ -86,10 +80,7 @@ onMounted(render);
     <!-- @click="drawPixel" -->
     <canvas
       ref="canvas"
-      @mousedown="drawPixel"
-      @mousemove="moveDraw"
-      @mouseleave="resetDraw"
-      @mouseup="resetDraw"
+      @mousedown="handleClick"
       :width="store.canvasWidth"
       :height="store.canvasHeight"
       class="canvas"

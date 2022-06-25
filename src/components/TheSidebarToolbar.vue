@@ -3,6 +3,7 @@ import { Icon } from "@iconify/vue";
 import { useStore } from "../stores";
 import BaseButtonSidebarToolbar from "./UI/BaseButtonSidebarToolbar.vue";
 const store = useStore();
+store.initializeCommand();
 </script>
 
 <template>

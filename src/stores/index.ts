@@ -24,94 +24,6 @@ export const useStore = defineStore("index", {
     layer.push(new Layer());
 
     const command: Array<Command> = [];
-    command.push(
-      new Command({
-        name: "펜",
-        icon: "edit",
-        commandable: {
-          clickStart: () => {},
-          clickEnd: () => {},
-          drag: () => {},
-        },
-      })
-    );
-    command.push(
-      new Command({
-        name: "지우개",
-        icon: "layout-sidebar-left",
-        commandable: {
-          clickStart: () => {},
-          clickEnd: () => {},
-          drag: () => {},
-        },
-      })
-    );
-    command.push(
-      new Command({
-        name: "직선",
-        icon: "minus",
-        commandable: {
-          clickStart: () => {},
-          clickEnd: () => {},
-          drag: () => {},
-        },
-      })
-    );
-    command.push(
-      new Command({
-        name: "직사각형",
-        icon: "checkbox-on",
-        commandable: {
-          clickStart: () => {},
-          clickEnd: () => {},
-          drag: () => {},
-        },
-      })
-    );
-    command.push(
-      new Command({
-        name: "원",
-        icon: "circle",
-        commandable: {
-          clickStart: () => {},
-          clickEnd: () => {},
-          drag: () => {},
-        },
-      })
-    );
-    command.push(
-      new Command({
-        name: "채우기",
-        icon: "fill",
-        commandable: {
-          clickStart: () => {},
-          clickEnd: () => {},
-          drag: () => {},
-        },
-      })
-    );
-    command.push(
-      new Command({
-        name: "영역 선택",
-        icon: "section",
-        commandable: {
-          clickStart: () => {},
-          clickEnd: () => {},
-          drag: () => {},
-        },
-      })
-    );
-    command.push(
-      new Command({
-        name: "이동",
-        icon: "move",
-        commandable: {
-          clickStart: () => {},
-          clickEnd: () => {},
-          drag: () => {},
-        },
-      })
-    );
 
     const currentCommandIndex: number = 0;
 
@@ -151,6 +63,104 @@ export const useStore = defineStore("index", {
   },
 
   actions: {
+    initializeCommand() {
+      const drawPen = (position: { x: number; y: number }) => {
+        const x = Math.floor(position.x / this.scale);
+        const y = Math.floor(position.y / this.scale);
+
+        if (x < 0 || x >= this.width || y < 0 || y >= this.height) return;
+
+        this.drawPixel(x, y);
+      };
+      this.command.push(
+        new Command({
+          name: "펜",
+          icon: "edit",
+          commandable: {
+            clickStart: drawPen,
+            clickEnd: () => {},
+            drag: drawPen,
+          },
+        })
+      );
+      this.command.push(
+        new Command({
+          name: "지우개",
+          icon: "layout-sidebar-left",
+          commandable: {
+            clickStart: () => {},
+            clickEnd: () => {},
+            drag: () => {},
+          },
+        })
+      );
+      this.command.push(
+        new Command({
+          name: "직선",
+          icon: "minus",
+          commandable: {
+            clickStart: () => {},
+            clickEnd: () => {},
+            drag: () => {},
+          },
+        })
+      );
+      this.command.push(
+        new Command({
+          name: "직사각형",
+          icon: "checkbox-on",
+          commandable: {
+            clickStart: () => {},
+            clickEnd: () => {},
+            drag: () => {},
+          },
+        })
+      );
+      this.command.push(
+        new Command({
+          name: "원",
+          icon: "circle",
+          commandable: {
+            clickStart: () => {},
+            clickEnd: () => {},
+            drag: () => {},
+          },
+        })
+      );
+      this.command.push(
+        new Command({
+          name: "채우기",
+          icon: "fill",
+          commandable: {
+            clickStart: () => {},
+            clickEnd: () => {},
+            drag: () => {},
+          },
+        })
+      );
+      this.command.push(
+        new Command({
+          name: "영역 선택",
+          icon: "section",
+          commandable: {
+            clickStart: () => {},
+            clickEnd: () => {},
+            drag: () => {},
+          },
+        })
+      );
+      this.command.push(
+        new Command({
+          name: "이동",
+          icon: "move",
+          commandable: {
+            clickStart: () => {},
+            clickEnd: () => {},
+            drag: () => {},
+          },
+        })
+      );
+    },
     setCurrentCommandIndex(commandIndex: number) {
       this.currentCommandIndex = commandIndex;
     },
