@@ -178,7 +178,7 @@ export const useStore = defineStore("index", {
       this.selectedColor = 0;
     },
     addLayer() {
-      this.layer.unshift(new Layer());
+      this.layer.unshift(new Layer({ width: this.width, height: this.height }));
       this.selectedLayer = this.layer[0].id;
     },
     deleteLayer(index: number) {
