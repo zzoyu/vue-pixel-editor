@@ -3,6 +3,7 @@ import { ref } from "vue";
 import ThePalette from "./sidebar/ThePalette.vue";
 import TheLayer from "./sidebar/TheLayer.vue";
 import TheLogo from "./TheLogo.vue";
+import TheSidebarToolbar from "./TheSidebarToolbar.vue";
 
 const isShow = ref(true);
 </script>
@@ -28,9 +29,14 @@ const isShow = ref(true);
 
   <button
     v-if="!isShow"
-    class="p-3 absolute left-0 top-0 bg-slate-50 rounded"
+    class="p-3 absolute left-0 top-0 bg-slate-50 rounded z-10"
     @click="isShow = !isShow"
   >
     {{ ">" }}
   </button>
+
+  <TheSidebarToolbar
+    class="absolute h-full"
+    :class="{ 'ml-48': isShow }"
+  ></TheSidebarToolbar>
 </template>

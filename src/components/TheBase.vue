@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import TheCanvas from "./TheCanvas.vue";
 import TheToolbar from "./TheToolbar.vue";
 </script>
