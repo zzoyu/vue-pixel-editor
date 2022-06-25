@@ -1,43 +1,18 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
+import { useStore } from "../stores";
+import BaseButtonSidebarToolbar from "./UI/BaseButtonSidebarToolbar.vue";
+const store = useStore();
 </script>
 
 <template>
-  <div class="left-0 inline-grid gap-0.5 items-center content-center my-auto">
-    <div
-      class="w-8 h-8 outline outline-1 outline-slate-300 hover:outline-dashed rounded-sm flex justify-center items-center bg-slate-50"
-    >
-      <Icon icon="pixelarticons:edit" />
-    </div>
-    <div
-      class="w-8 h-8 outline outline-1 outline-slate-300 hover:outline-dashed rounded-sm flex justify-center items-center bg-slate-50"
-    >
-      <Icon icon="pixelarticons:minus" />
-    </div>
-    <div
-      class="w-8 h-8 outline outline-1 outline-slate-300 hover:outline-dashed rounded-sm flex justify-center items-center bg-slate-50"
-    >
-      <Icon icon="pixelarticons:checkbox-on" />
-    </div>
-    <div
-      class="w-8 h-8 outline outline-1 outline-slate-300 hover:outline-dashed rounded-sm flex justify-center items-center bg-slate-50"
-    >
-      <Icon icon="pixelarticons:circle" />
-    </div>
-    <div
-      class="w-8 h-8 outline outline-1 outline-slate-300 hover:outline-dashed rounded-sm flex justify-center items-center bg-slate-50"
-    >
-      <Icon icon="pixelarticons:fill" />
-    </div>
-    <div
-      class="w-8 h-8 outline outline-1 outline-slate-300 hover:outline-dashed rounded-sm flex justify-center items-center bg-slate-50"
-    >
-      <Icon icon="pixelarticons:section" />
-    </div>
-    <div
-      class="w-8 h-8 outline outline-1 outline-slate-300 hover:outline-dashed rounded-sm flex justify-center items-center bg-slate-50"
-    >
-      <Icon icon="pixelarticons:move" />
-    </div>
+  <div class="left-0.5 inline-grid gap-0.5 items-center content-center my-auto">
+    <BaseButtonSidebarToolbar
+      v-for="(command, index) in store.command"
+      :key="`command_${index}`"
+      :is-active="index === store.currentCommandIndex"
+      :command="command"
+      @click="store.setCurrentCommandIndex(index)"
+    ></BaseButtonSidebarToolbar>
   </div>
 </template>

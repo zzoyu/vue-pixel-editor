@@ -7,6 +7,7 @@ import Pixel from "../classes/pixel";
 import ArcadeStandard29 from "../data/ARCADE_STANDARD_29.json";
 import PICO8 from "../data/PICO-8.json";
 import DB32 from "../data/DB32.json";
+import { Command } from "../classes/command";
 
 // useStore could be anything like useUser, useCart
 // the first argument is a unique id of the store across your application
@@ -22,6 +23,98 @@ export const useStore = defineStore("index", {
     const layer: Array<Layer> = [];
     layer.push(new Layer());
 
+    const command: Array<Command> = [];
+    command.push(
+      new Command({
+        name: "펜",
+        icon: "edit",
+        commandable: {
+          clickStart: () => {},
+          clickEnd: () => {},
+          drag: () => {},
+        },
+      })
+    );
+    command.push(
+      new Command({
+        name: "지우개",
+        icon: "layout-sidebar-left",
+        commandable: {
+          clickStart: () => {},
+          clickEnd: () => {},
+          drag: () => {},
+        },
+      })
+    );
+    command.push(
+      new Command({
+        name: "직선",
+        icon: "minus",
+        commandable: {
+          clickStart: () => {},
+          clickEnd: () => {},
+          drag: () => {},
+        },
+      })
+    );
+    command.push(
+      new Command({
+        name: "직사각형",
+        icon: "checkbox-on",
+        commandable: {
+          clickStart: () => {},
+          clickEnd: () => {},
+          drag: () => {},
+        },
+      })
+    );
+    command.push(
+      new Command({
+        name: "원",
+        icon: "circle",
+        commandable: {
+          clickStart: () => {},
+          clickEnd: () => {},
+          drag: () => {},
+        },
+      })
+    );
+    command.push(
+      new Command({
+        name: "채우기",
+        icon: "fill",
+        commandable: {
+          clickStart: () => {},
+          clickEnd: () => {},
+          drag: () => {},
+        },
+      })
+    );
+    command.push(
+      new Command({
+        name: "영역 선택",
+        icon: "section",
+        commandable: {
+          clickStart: () => {},
+          clickEnd: () => {},
+          drag: () => {},
+        },
+      })
+    );
+    command.push(
+      new Command({
+        name: "이동",
+        icon: "move",
+        commandable: {
+          clickStart: () => {},
+          clickEnd: () => {},
+          drag: () => {},
+        },
+      })
+    );
+
+    const currentCommandIndex: number = 0;
+
     return {
       scale: 32,
       width: 16,
@@ -32,6 +125,8 @@ export const useStore = defineStore("index", {
       selectedColor: 0,
       selectedLayer: layer[0].id,
       layer,
+      currentCommandIndex,
+      command,
     };
   },
 
@@ -56,6 +151,9 @@ export const useStore = defineStore("index", {
   },
 
   actions: {
+    setCurrentCommandIndex(commandIndex: number) {
+      this.currentCommandIndex = commandIndex;
+    },
     updateSelectedPalette(index: number) {
       this.selectedPalette = index;
       this.selectedColor = 0;
@@ -91,7 +189,7 @@ export const useStore = defineStore("index", {
           : this.backgroundType + 1;
     },
     drawPixel(x: number, y: number) {
-      console.log(this.layer);
+      // console.log(this.layer);
       this.layer
         .find((i) => i.id === this.selectedLayer)
         ?.addPixel?.(new Pixel(this.currentColor, x, y));

@@ -16,6 +16,8 @@ Vue 3 + TypeScript + Vite + Pinia + TailwindCSS 기반의 픽셀 에디터입니
   - [ ] 네모
   - [ ] 선택 이동
   - [ ] 레이어 이동
+  - [ ] 채우기
+  - [ ] 지우개
   - [ ] 커스텀 팔레트
   - [ ] 캔버스 크기 수정
   - [ ] 파일로 내보내기 - PNG
@@ -24,6 +26,7 @@ Vue 3 + TypeScript + Vite + Pinia + TailwindCSS 기반의 픽셀 에디터입니
 
 - 완료 작업
 
+  - [x] 도구 바 작성 및 클래스 처리
   - [x] 팔레트
   - [x] 펜
   - [x] 기능 Pane 컴포넌트화

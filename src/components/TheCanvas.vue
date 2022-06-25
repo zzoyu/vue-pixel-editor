@@ -16,7 +16,7 @@ const render = debounce(() => {
   buffer.height = ctx.canvas.height;
   const bufferCtx = buffer.getContext("2d");
   if (!bufferCtx) return;
-  console.log(store.visibleLayerList);
+  // console.log(store.visibleLayerList);
   store.visibleLayerList.forEach((i) => i.render(bufferCtx, store.scale));
   // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   ctx.canvas.width = ctx.canvas.width;
