@@ -73,14 +73,26 @@ export const useStore = defineStore("index", {
 
   actions: {
     initializeCommand() {
-      const drawPen = (position: { x: number; y: number }) => {
+      const handleDraw = (
+        position: { x: number; y: number },
+        drawFunction: (x: number, y: number) => void
+      ) => {
         const x = Math.floor(position.x / this.scale);
         const y = Math.floor(position.y / this.scale);
 
         if (x < 0 || x >= this.width || y < 0 || y >= this.height) return;
 
-        this.drawPixel(x, y);
+        drawFunction(x, y);
       };
+
+      const drawPen = (position: { x: number; y: number }) => {
+        handleDraw(position, this.drawPixel);
+      };
+
+      const erasePen = (position: { x: number; y: number }) => {
+        handleDraw(position, this.erasePixel);
+      };
+
       this.command.push(
         new Command({
           name: "펜",
@@ -97,15 +109,15 @@ export const useStore = defineStore("index", {
           name: "지우개",
           icon: "layout-sidebar-left",
           commandable: {
-            clickStart: () => {},
+            clickStart: erasePen,
             clickEnd: () => {},
-            drag: () => {},
+            drag: erasePen,
           },
         })
       );
       this.command.push(
         new Command({
-          name: "직선",
+          name: "직선(구현X)",
           icon: "minus",
           commandable: {
             clickStart: () => {},
@@ -116,7 +128,7 @@ export const useStore = defineStore("index", {
       );
       this.command.push(
         new Command({
-          name: "직사각형",
+          name: "직사각형(구현X)",
           icon: "checkbox-on",
           commandable: {
             clickStart: () => {},
@@ -127,7 +139,7 @@ export const useStore = defineStore("index", {
       );
       this.command.push(
         new Command({
-          name: "원",
+          name: "원(구현X)",
           icon: "circle",
           commandable: {
             clickStart: () => {},
@@ -138,7 +150,7 @@ export const useStore = defineStore("index", {
       );
       this.command.push(
         new Command({
-          name: "채우기",
+          name: "채우기(구현X)",
           icon: "fill",
           commandable: {
             clickStart: () => {},
@@ -149,7 +161,7 @@ export const useStore = defineStore("index", {
       );
       this.command.push(
         new Command({
-          name: "영역 선택",
+          name: "영역 선택(구현X)",
           icon: "section",
           commandable: {
             clickStart: () => {},
@@ -160,7 +172,7 @@ export const useStore = defineStore("index", {
       );
       this.command.push(
         new Command({
-          name: "이동",
+          name: "이동(구현X)",
           icon: "move",
           commandable: {
             clickStart: () => {},
@@ -210,10 +222,10 @@ export const useStore = defineStore("index", {
           : this.backgroundType + 1;
     },
     drawPixel(x: number, y: number) {
-      // console.log(this.layer);
-      this.layer
-        .find((i) => i.id === this.selectedLayer)
-        ?.addPixel?.(new Pixel(this.currentColor, x, y));
+      this.currentLayer?.addPixel?.(new Pixel(this.currentColor, x, y));
+    },
+    erasePixel(x: number, y: number) {
+      this.currentLayer?.removePixel?.(x, y);
     },
   },
 });

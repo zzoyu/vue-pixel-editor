@@ -59,6 +59,10 @@ export class Layer extends Drawable {
     this.pixels[pixel.y][pixel.x] = pixel;
   }
 
+  removePixel(x: number, y: number) {
+    delete this.pixels[y][x];
+  }
+
   render(context: CanvasRenderingContext2D, scale: number): void {
     if (!this.isVisible) return;
 
