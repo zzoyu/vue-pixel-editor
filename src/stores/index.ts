@@ -20,8 +20,11 @@ export const useStore = defineStore("index", {
     palette.push(Palette.fromJSON(PICO8));
     palette.push(Palette.fromJSON(DB32));
 
+    const width = 16;
+    const height = 16;
+
     const layer: Array<Layer> = [];
-    layer.push(new Layer());
+    layer.push(new Layer({ width, height }));
 
     const command: Array<Command> = [];
 
@@ -29,8 +32,8 @@ export const useStore = defineStore("index", {
 
     return {
       scale: 32,
-      width: 16,
-      height: 16,
+      width,
+      height,
       backgroundType: BackgroundType.checker,
       palette,
       selectedPalette: 0,
@@ -175,7 +178,7 @@ export const useStore = defineStore("index", {
       this.selectedColor = 0;
     },
     addLayer() {
-      this.layer.unshift(new Layer());
+      this.layer.unshift(new Layer({ width: this.width, height: this.height }));
       this.selectedLayer = this.layer[0].id;
     },
     deleteLayer(index: number) {

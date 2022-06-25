@@ -2,7 +2,7 @@ import Drawable from "./drawable";
 import Pixel from "./pixel";
 
 export class Layer extends Drawable {
-  pixels: Array<Pixel>;
+  pixels: Array<Array<Pixel | null>>;
   opacity: number;
   isVisible: boolean;
   isLocked: boolean;
@@ -10,9 +10,17 @@ export class Layer extends Drawable {
   id: number;
   static index: number = 0;
 
-  constructor(index: number = Layer.index + 1) {
+  constructor(
+    size: { width: number; height: number },
+    index: number = Layer.index + 1
+  ) {
     super();
-    this.pixels = new Array<Pixel>();
+
+    // 캔버스 크기만큼 레이어 생성
+    this.pixels = new Array<Array<Pixel | null>>(size.height)
+      .fill([])
+      .map(() => new Array<Pixel | null>(size.width).fill(null));
+    // console.log(this.pixels);
     this.opacity = 100;
     this.isVisible = true;
     this.isLocked = false;
@@ -21,22 +29,43 @@ export class Layer extends Drawable {
     Layer.index++;
   }
 
-  addPixel(pixel: Pixel) {
-    const duplicatePixel = this.pixels.findIndex(
-      (i) => i.x === pixel.x && i.y === pixel.y
-    );
-    if (duplicatePixel >= 0) {
-      this.pixels[duplicatePixel] = pixel;
-      return;
+  resize(width: number, height: number) {
+    // if( this.width > width || this.height > height ) {
+    //   if(!alert("경고", "변경하려고 하는 캔버스 사이즈가 실제 캔버스 사이즈보다 작습니다. 진행하시겠습니까?")) return;
+    // }
+
+    const removeWidth = this.pixels[0].length - width;
+    const removeHeight = this.pixels.length - height;
+
+    if (removeWidth !== 0) {
+      for (const row of this.pixels) {
+        if (removeWidth) row.splice(row.length - 1, -removeWidth);
+        else row.push(...new Array<Pixel | null>(Math.abs(removeWidth)));
+      }
     }
-    this.pixels.push(pixel);
+
+    if (removeHeight > 0) {
+      this.pixels.splice(this.pixels.length - 1 - removeHeight, removeHeight);
+    } else if (removeHeight < 0) {
+      this.pixels.push(
+        ...new Array<Array<Pixel | null>>(Math.abs(removeHeight))
+          .fill([])
+          .map(() => new Array<Pixel | null>(width).fill(null))
+      );
+    }
+  }
+
+  addPixel(pixel: Pixel) {
+    this.pixels[pixel.y][pixel.x] = pixel;
   }
 
   render(context: CanvasRenderingContext2D, scale: number): void {
     if (!this.isVisible) return;
 
-    for (const pixel of this.pixels) {
-      pixel.render(context, scale);
+    for (const row of this.pixels) {
+      for (const pixel of row) {
+        pixel?.render?.(context, scale);
+      }
     }
   }
 
