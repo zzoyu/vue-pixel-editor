@@ -19,20 +19,29 @@ const render = debounce(() => {
   // console.log(store.visibleLayerList);
   store.visibleLayerList.forEach((i) => i.render(bufferCtx, store.scale));
   // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  store.temporaryLayer?.render?.(bufferCtx, store.scale);
+
   ctx.canvas.width = ctx.canvas.width;
+
   ctx.drawImage(buffer, 0, 0);
-  const tempPosition = calculateRelativePosition(
-    cursorPosition.value as MouseEvent
-  );
 
   if (store.currentCommand.isDrawable) {
     ctx.fillStyle = store.currentColor.hex;
-    ctx.fillRect(
-      tempPosition.x - (tempPosition.x % store.scale),
-      tempPosition.y - (tempPosition.y % store.scale),
-      store.scale,
-      store.scale
+    const tempPosition = calculateRelativePosition(
+      cursorPosition.value as MouseEvent
     );
+    if (
+      tempPosition.x >= 0 &&
+      tempPosition.x < ctx.canvas.width &&
+      tempPosition.y >= 0 &&
+      tempPosition.y < ctx.canvas.height
+    )
+      ctx.fillRect(
+        tempPosition.x - (tempPosition.x % store.scale),
+        tempPosition.y - (tempPosition.y % store.scale),
+        store.scale,
+        store.scale
+      );
   }
 
   requestAnimationFrame(render);
@@ -64,9 +73,9 @@ const handleMouseUp = (event: MouseEvent) => {
   document.removeEventListener("mouseup", handleMouseUp);
 };
 
-const handleClick = (event: MouseEvent) => {
+const handleClick = async (event: MouseEvent) => {
   if (!store.currentLayer?.isVisible || !store.isTotalLayerVisible) return;
-  store.command[store.currentCommandIndex].clickStart?.(
+  await store.command[store.currentCommandIndex].clickStart?.(
     calculateRelativePosition(event)
   );
   document.addEventListener("mousemove", handleMouseMove);
