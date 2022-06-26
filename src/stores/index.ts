@@ -96,15 +96,15 @@ export const useStore = defineStore("index", {
     },
     initializeCommand() {
       const startLine = (position: { x: number; y: number }) => {
-        this.handleDraw(position, this.startLine);
+        this.handleDraw(position, this.startLine.bind(this));
       };
 
       const moveLine = (position: { x: number; y: number }) => {
-        this.handleDraw(position, this.moveLine);
+        this.handleDraw(position, this.moveLine.bind(this));
       };
 
       const drawLine = (position: { x: number; y: number }) => {
-        this.handleDraw(position, this.drawLine);
+        this.handleDraw(position, this.drawLine.bind(this));
       };
 
       this.command.push(
@@ -114,9 +114,11 @@ export const useStore = defineStore("index", {
           cursor:
             "url('https://api.iconify.design/pixelarticons/edit.svg') 0 16, auto",
           commandable: {
-            clickStart: (position) => this.handleDraw(position, this.drawPixel),
+            clickStart: (position) =>
+              this.handleDraw(position, this.drawPixel.bind(this)),
             clickEnd: () => {},
-            drag: (position) => this.handleDraw(position, this.drawPixel),
+            drag: (position) =>
+              this.handleDraw(position, this.drawPixel.bind(this)),
           },
         })
       );
@@ -129,9 +131,10 @@ export const useStore = defineStore("index", {
           isDrawable: false,
           commandable: {
             clickStart: (position) =>
-              this.handleDraw(position, this.erasePixel),
+              this.handleDraw(position, this.erasePixel.bind(this)),
             clickEnd: () => {},
-            drag: (position) => this.handleDraw(position, this.erasePixel),
+            drag: (position) =>
+              this.handleDraw(position, this.erasePixel.bind(this)),
           },
         })
       );
