@@ -95,8 +95,8 @@ export const useStore = defineStore("index", {
       return { x: resultX, y: resultY };
     },
     initializeCommand() {
-      const startLine = (position: { x: number; y: number }) => {
-        this.handleDraw(position, this.startLine.bind(this));
+      const startTemporaryDraw = (position: { x: number; y: number }) => {
+        this.handleDraw(position, this.startTemporaryDraw.bind(this));
       };
 
       const moveLine = (position: { x: number; y: number }) => {
@@ -104,7 +104,15 @@ export const useStore = defineStore("index", {
       };
 
       const drawLine = (position: { x: number; y: number }) => {
-        this.handleDraw(position, this.drawLine.bind(this));
+        this.handleDraw(position, this.applyTemporaryDraw.bind(this));
+      };
+
+      const moveRectangle = (position: { x: number; y: number }) => {
+        this.handleDraw(position, this.moveRectangle.bind(this));
+      };
+
+      const drawRectangle = (position: { x: number; y: number }) => {
+        this.handleDraw(position, this.applyTemporaryDraw.bind(this));
       };
 
       this.command.push(
@@ -144,7 +152,7 @@ export const useStore = defineStore("index", {
           icon: "minus",
           cursor: "crosshair",
           commandable: {
-            clickStart: startLine,
+            clickStart: startTemporaryDraw,
             clickEnd: drawLine,
             drag: moveLine,
           },
@@ -152,13 +160,13 @@ export const useStore = defineStore("index", {
       );
       this.command.push(
         new Command({
-          name: "직사각형(구현X)",
+          name: "직사각형",
           icon: "checkbox-on",
           cursor: "crosshair",
           commandable: {
-            clickStart: () => {},
-            clickEnd: () => {},
-            drag: () => {},
+            clickStart: startTemporaryDraw,
+            clickEnd: drawRectangle,
+            drag: moveRectangle,
           },
         })
       );
@@ -263,16 +271,13 @@ export const useStore = defineStore("index", {
     erasePixel(x: number, y: number) {
       this.currentLayer?.removePixel?.(x, y);
     },
-    startLine(x: number, y: number) {
+    startTemporaryDraw(x: number, y: number) {
       this.temporaryPosition = { x, y };
     },
     moveLine(x: number, y: number) {
-      if (!this.temporaryPosition) return;
-
-      this.temporaryLayer = new Layer(
-        { width: this.width, height: this.height },
-        -1
-      );
+      if (!this.temporaryPosition)
+        throw new Error("ERROR: there is no temporary position");
+      this.updateTemporaryDraw();
 
       const dx = x - this.temporaryPosition.x;
       const dy = y - this.temporaryPosition.y;
@@ -322,12 +327,55 @@ export const useStore = defineStore("index", {
         }
       }
     },
-    drawLine() {
+    applyTemporaryDraw() {
       if (!this.temporaryPosition) return;
       this.temporaryPosition = null;
       if (!this.temporaryLayer || !this.currentLayer) return;
       this.mergeLayer(this.temporaryLayer, this.currentLayer);
       this.temporaryLayer = null;
+    },
+    updateTemporaryDraw() {
+      this.temporaryLayer = new Layer(
+        { width: this.width, height: this.height },
+        -1
+      );
+    },
+    moveRectangle(x: number, y: number) {
+      if (!this.temporaryPosition)
+        throw new Error("ERROR: there is no temporary position");
+      this.updateTemporaryDraw();
+
+      const left = Math.min(this.temporaryPosition.x, x);
+      const top = Math.max(this.temporaryPosition.y, y);
+      const right = Math.max(this.temporaryPosition.x, x);
+      const bottom = Math.min(this.temporaryPosition.y, y);
+
+      for (let pixelY = bottom; pixelY <= top; pixelY++) {
+        try {
+          this.temporaryLayer?.addPixel?.(
+            new Pixel(this.currentColor, left, pixelY)
+          );
+          this.temporaryLayer?.addPixel?.(
+            new Pixel(this.currentColor, right, pixelY)
+          );
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      // 귀퉁이 중복 제거
+      for (let pixelX = left + 1; pixelX < right; pixelX++) {
+        try {
+          this.temporaryLayer?.addPixel?.(
+            new Pixel(this.currentColor, pixelX, top)
+          );
+          this.temporaryLayer?.addPixel?.(
+            new Pixel(this.currentColor, pixelX, bottom)
+          );
+        } catch (error) {
+          console.error(error);
+        }
+      }
     },
     mergeLayer(source: Layer, destination: Layer) {
       destination.merge(source);

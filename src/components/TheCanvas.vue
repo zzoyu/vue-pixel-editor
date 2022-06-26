@@ -55,11 +55,11 @@ const calculateRelativePosition = (
 
   return { x: event.x - rectCanvas.x, y: event.y - rectCanvas.y };
 };
-const handleMouseMove = (event: MouseEvent) => {
+const handleMouseMove = debounce((event: MouseEvent) => {
   store.command[store.currentCommandIndex].drag?.(
     calculateRelativePosition(event)
   );
-};
+}, 5);
 const handleMouseUp = (event: MouseEvent) => {
   store.command[store.currentCommandIndex].clickEnd?.(
     calculateRelativePosition(event)
