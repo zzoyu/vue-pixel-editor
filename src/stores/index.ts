@@ -103,16 +103,15 @@ export const useStore = defineStore("index", {
         this.handleDraw(position, this.moveLine.bind(this));
       };
 
-      const drawLine = (position: { x: number; y: number }) => {
+      const applyTemporaryDraw = (position: { x: number; y: number }) => {
         this.handleDraw(position, this.applyTemporaryDraw.bind(this));
       };
 
       const moveRectangle = (position: { x: number; y: number }) => {
         this.handleDraw(position, this.moveRectangle.bind(this));
       };
-
-      const drawRectangle = (position: { x: number; y: number }) => {
-        this.handleDraw(position, this.applyTemporaryDraw.bind(this));
+      const moveEllipse = (position: { x: number; y: number }) => {
+        this.handleDraw(position, this.moveEllipse.bind(this));
       };
 
       this.command.push(
@@ -153,7 +152,7 @@ export const useStore = defineStore("index", {
           cursor: "crosshair",
           commandable: {
             clickStart: startTemporaryDraw,
-            clickEnd: drawLine,
+            clickEnd: applyTemporaryDraw,
             drag: moveLine,
           },
         })
@@ -165,20 +164,20 @@ export const useStore = defineStore("index", {
           cursor: "crosshair",
           commandable: {
             clickStart: startTemporaryDraw,
-            clickEnd: drawRectangle,
+            clickEnd: applyTemporaryDraw,
             drag: moveRectangle,
           },
         })
       );
       this.command.push(
         new Command({
-          name: "원(구현X)",
+          name: "원",
           icon: "circle",
           cursor: "crosshair",
           commandable: {
-            clickStart: () => {},
-            clickEnd: () => {},
-            drag: () => {},
+            clickStart: startTemporaryDraw,
+            clickEnd: applyTemporaryDraw,
+            drag: moveEllipse,
           },
         })
       );
@@ -371,6 +370,37 @@ export const useStore = defineStore("index", {
           );
           this.temporaryLayer?.addPixel?.(
             new Pixel(this.currentColor, pixelX, bottom)
+          );
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    },
+    moveEllipse(x: number, y: number) {
+      if (!this.temporaryPosition)
+        throw new Error("ERROR: there is no temporary position");
+      this.updateTemporaryDraw();
+
+      const left = Math.min(this.temporaryPosition.x, x);
+      const top = Math.min(this.temporaryPosition.y, y);
+      const right = Math.max(this.temporaryPosition.x, x);
+      const bottom = Math.max(this.temporaryPosition.y, y);
+
+      const rx = Math.round((right - left) / 2);
+      const ry = Math.round((bottom - top) / 2);
+      const centerX = left + rx;
+      const centerY = top + ry;
+
+      const step = Math.round(90 / (rx + ry));
+
+      for (let degree = 0; degree < 360; degree += step) {
+        const radian = degree * (Math.PI / 180);
+        const pixelX = Math.round(centerX + rx * Math.cos(radian));
+        const pixelY = Math.round(centerY + ry * Math.sin(radian));
+
+        try {
+          this.temporaryLayer?.addPixel?.(
+            new Pixel(this.currentColor, pixelX, pixelY)
           );
         } catch (error) {
           console.error(error);
