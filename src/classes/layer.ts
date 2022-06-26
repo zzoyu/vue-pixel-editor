@@ -60,7 +60,7 @@ export class Layer extends Drawable {
   addPixel(pixel: Pixel) {
     try {
       this.pixels[pixel.y][pixel.x] = pixel;
-    } catch (error: any) {
+    } catch (error) {
       console.error(pixel);
       throw new Error("PIXEL CREATION ERROR");
     }

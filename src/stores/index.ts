@@ -287,7 +287,7 @@ export const useStore = defineStore("index", {
             this.temporaryLayer?.addPixel?.(
               new Pixel(this.currentColor, lineX, lineY)
             );
-          } catch (error: any) {
+          } catch (error) {
             console.log(this.temporaryPosition, { dx, dy, lineX, lineY, x, y });
           }
         }
@@ -309,7 +309,7 @@ export const useStore = defineStore("index", {
             this.temporaryLayer?.addPixel?.(
               new Pixel(this.currentColor, lineX, lineY)
             );
-          } catch (error: any) {
+          } catch (error) {
             console.log(this.temporaryPosition, { dx, dy, lineX, lineY, x, y });
           }
         }
