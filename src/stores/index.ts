@@ -114,8 +114,9 @@ export const useStore = defineStore("index", {
           cursor:
             "url('https://api.iconify.design/pixelarticons/edit.svg') 0 16, auto",
           commandable: {
-            clickStart: (position) =>
-              this.handleDraw(position, this.drawPixel.bind(this)),
+            clickStart: (position) => {
+              this.handleDraw(position, this.drawPixel);
+            },
             clickEnd: () => {},
             drag: (position) =>
               this.handleDraw(position, this.drawPixel.bind(this)),
@@ -318,7 +319,7 @@ export const useStore = defineStore("index", {
         }
       }
     },
-    drawLine(x: number, y: number) {
+    drawLine() {
       if (!this.temporaryPosition) return;
       this.temporaryPosition = null;
       if (!this.temporaryLayer || !this.currentLayer) return;
