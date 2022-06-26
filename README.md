@@ -12,7 +12,6 @@ Vue 3 + TypeScript + Vite + Pinia + TailwindCSS 기반의 픽셀 에디터입니
     - [ ] 확대&축소
     - [ ] 사용한 색상 리스트
   - [ ] 채우기
-  - [ ] 원
   - [ ] 스프라이트
   - [ ] 애니메이션
   - [ ] 어니언 스킨
@@ -31,6 +30,7 @@ Vue 3 + TypeScript + Vite + Pinia + TailwindCSS 기반의 픽셀 에디터입니
 
 - 완료 작업
 
+  - [x] 원
   - [x] 그리기 클릭 전에 미리보기
   - [x] 네모
   - [x] 직선
