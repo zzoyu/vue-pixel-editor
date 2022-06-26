@@ -114,6 +114,10 @@ export const useStore = defineStore("index", {
         this.handleDraw(position, this.moveEllipse.bind(this));
       };
 
+      const drawFillArea = (position: { x: number; y: number }) => {
+        this.handleDraw(position, this.drawFillArea.bind(this));
+      };
+
       this.command.push(
         new Command({
           name: "펜",
@@ -183,14 +187,14 @@ export const useStore = defineStore("index", {
       );
       this.command.push(
         new Command({
-          name: "채우기(구현X)",
+          name: "채우기",
           icon: "fill-half",
           cursor:
             "url('https://api.iconify.design/pixelarticons/fill-half.svg') 16 16, auto",
           commandable: {
-            clickStart: () => {},
-            clickEnd: () => {},
-            drag: () => {},
+            clickStart: drawFillArea,
+            clickEnd: () => {}, // 클릭 시 즉시 실행
+            drag: () => {}, // 클릭 시 즉시 실행
           },
         })
       );
@@ -409,6 +413,9 @@ export const useStore = defineStore("index", {
     },
     mergeLayer(source: Layer, destination: Layer) {
       destination.merge(source);
+    },
+    drawFillArea(x: number, y: number) {
+      this.currentLayer?.fillPixel(x, y, this.currentColor);
     },
   },
 });
