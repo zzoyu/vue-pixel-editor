@@ -114,9 +114,8 @@ export const useStore = defineStore("index", {
           cursor:
             "url('https://api.iconify.design/pixelarticons/edit.svg') 0 16, auto",
           commandable: {
-            clickStart: (position) => {
-              this.handleDraw(position, this.drawPixel);
-            },
+            clickStart: (position) =>
+              this.handleDraw(position, this.drawPixel.bind(this)),
             clickEnd: () => {},
             drag: (position) =>
               this.handleDraw(position, this.drawPixel.bind(this)),
