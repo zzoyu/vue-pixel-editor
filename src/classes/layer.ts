@@ -93,8 +93,8 @@ export class Layer extends Drawable {
     nextPositions.push({ x, y }); // 출발 위치 지정
 
     while (nextPositions.length !== 0) {
-      console.log("DFS");
       const currentPosition = nextPositions.pop() as { x: number; y: number };
+
       visitedPositions.push(currentPosition);
       this.pixels[currentPosition.y][currentPosition.x] = new Pixel(
         color,
@@ -104,8 +104,8 @@ export class Layer extends Drawable {
 
       for (const direction of directions) {
         const checkingPosition = {
-          x: currentPosition!.x + direction[0],
-          y: currentPosition!.y + direction[1],
+          x: currentPosition.x + direction[0],
+          y: currentPosition.y + direction[1],
         };
 
         // 바운더리 체크
