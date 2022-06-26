@@ -226,6 +226,10 @@ export const useStore = defineStore("index", {
       this.selectedLayer = this.layer[0].id;
     },
     deleteLayer(index: number) {
+      if (this.layer[index].id === this.selectedLayer)
+        this.selectedLayer =
+          this.layer?.[index + 1]?.id ?? this.layer?.[index - 1]?.id;
+
       this.layer.splice(index, 1);
     },
     hideLayer(index: number) {
