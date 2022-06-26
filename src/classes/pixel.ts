@@ -7,11 +7,12 @@ export default class Pixel extends Drawable {
   y: number;
 
   constructor(color: Color, x: number, y: number) {
+    // if (isNaN(x) || isNaN(y)) throw "PIXEL ERROR : INVALID POSITION";
     super();
     this.color = color;
     this.x = x;
     this.y = y;
-    console.log("new pixel");
+    // console.log("new pixel");
   }
 
   render(context: CanvasRenderingContext2D, scale: number) {

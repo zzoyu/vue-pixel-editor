@@ -40,6 +40,8 @@ export const useStore = defineStore("index", {
       selectedColor: 0,
       selectedLayer: layer[0].id,
       layer,
+      temporaryLayer: null as Layer | null, //new Layer({ width, height }, -1),
+      temporaryPosition: null as { x: number; y: number } | null,
       isTotalLayerVisible: true,
       currentCommandIndex,
       command,
@@ -57,12 +59,7 @@ export const useStore = defineStore("index", {
     currentLayer: (state) =>
       state.layer.find((i) => i.id === state.selectedLayer),
     paletteNameList: (state) => state.palette.map((i) => i.name),
-    // // 볼 수 있는 레이어가 하나라도 존재하면 참
-    // isLayerVisible: (state) => {
-    //   if (!state.isTotalLayerVisible) return false;
-    //   if (state.layer.length === 0) return state.isTotalLayerVisible;
-    //   return state.layer.find((i) => i?.isVisible) ? true : false;
-    // },
+
     canvasWidth: (state) => state.scale * state.width,
     canvasHeight: (state) => state.scale * state.height,
     visibleLayerList: (state) =>
@@ -73,25 +70,41 @@ export const useStore = defineStore("index", {
   },
 
   actions: {
+    handleDraw(
+      position: { x: number; y: number },
+      drawFunction: (x: number, y: number) => void
+    ) {
+      const resultPosition = this.calculatePosition(position.x, position.y);
+
+      if (!resultPosition) return;
+
+      drawFunction(resultPosition.x, resultPosition.y);
+    },
+    calculatePosition(x: number, y: number) {
+      const resultX = Math.floor(x / this.scale);
+      const resultY = Math.floor(y / this.scale);
+
+      if (
+        resultX < 0 ||
+        resultX >= this.width ||
+        resultY < 0 ||
+        resultY >= this.height
+      )
+        return null;
+
+      return { x: resultX, y: resultY };
+    },
     initializeCommand() {
-      const handleDraw = (
-        position: { x: number; y: number },
-        drawFunction: (x: number, y: number) => void
-      ) => {
-        const x = Math.floor(position.x / this.scale);
-        const y = Math.floor(position.y / this.scale);
-
-        if (x < 0 || x >= this.width || y < 0 || y >= this.height) return;
-
-        drawFunction(x, y);
+      const startLine = (position: { x: number; y: number }) => {
+        this.handleDraw(position, this.startLine);
       };
 
-      const drawPen = (position: { x: number; y: number }) => {
-        handleDraw(position, this.drawPixel);
+      const moveLine = (position: { x: number; y: number }) => {
+        this.handleDraw(position, this.moveLine);
       };
 
-      const erasePen = (position: { x: number; y: number }) => {
-        handleDraw(position, this.erasePixel);
+      const drawLine = (position: { x: number; y: number }) => {
+        this.handleDraw(position, this.drawLine);
       };
 
       this.command.push(
@@ -101,9 +114,9 @@ export const useStore = defineStore("index", {
           cursor:
             "url('https://api.iconify.design/pixelarticons/edit.svg') 0 16, auto",
           commandable: {
-            clickStart: drawPen,
+            clickStart: (position) => this.handleDraw(position, this.drawPixel),
             clickEnd: () => {},
-            drag: drawPen,
+            drag: (position) => this.handleDraw(position, this.drawPixel),
           },
         })
       );
@@ -115,21 +128,22 @@ export const useStore = defineStore("index", {
             "url('https://api.iconify.design/pixelarticons/layout-sidebar-left.svg') 0 8, auto",
           isDrawable: false,
           commandable: {
-            clickStart: erasePen,
+            clickStart: (position) =>
+              this.handleDraw(position, this.erasePixel),
             clickEnd: () => {},
-            drag: erasePen,
+            drag: (position) => this.handleDraw(position, this.erasePixel),
           },
         })
       );
       this.command.push(
         new Command({
-          name: "직선(구현X)",
+          name: "직선",
           icon: "minus",
           cursor: "crosshair",
           commandable: {
-            clickStart: () => {},
-            clickEnd: () => {},
-            drag: () => {},
+            clickStart: startLine,
+            clickEnd: drawLine,
+            drag: moveLine,
           },
         })
       );
@@ -241,6 +255,75 @@ export const useStore = defineStore("index", {
     },
     erasePixel(x: number, y: number) {
       this.currentLayer?.removePixel?.(x, y);
+    },
+    startLine(x: number, y: number) {
+      this.temporaryPosition = { x, y };
+    },
+    moveLine(x: number, y: number) {
+      if (!this.temporaryPosition) return;
+
+      this.temporaryLayer = new Layer(
+        { width: this.width, height: this.height },
+        -1
+      );
+
+      const dx = x - this.temporaryPosition.x;
+      const dy = y - this.temporaryPosition.y;
+
+      if (Math.abs(dx) >= Math.abs(dy)) {
+        const step = dx >= 0 ? 1 : -1;
+        for (
+          let lineX = this.temporaryPosition.x;
+          lineX != x + step;
+          lineX += step
+        ) {
+          let lineY = this.temporaryPosition.y;
+
+          if (dx !== 0) {
+            lineY += Math.round(dy * ((lineX - this.temporaryPosition.x) / dx));
+          }
+
+          try {
+            this.temporaryLayer?.addPixel?.(
+              new Pixel(this.currentColor, lineX, lineY)
+            );
+          } catch (error: any) {
+            console.log(this.temporaryPosition, { dx, dy, lineX, lineY, x, y });
+          }
+        }
+      } else {
+        const step = dy >= 0 ? 1 : -1;
+
+        for (
+          let lineY = this.temporaryPosition.y;
+          lineY != y + step;
+          lineY += step
+        ) {
+          let lineX = this.temporaryPosition.x;
+
+          if (dy !== 0) {
+            lineX += Math.round(dx * ((lineY - this.temporaryPosition.y) / dy));
+          }
+
+          try {
+            this.temporaryLayer?.addPixel?.(
+              new Pixel(this.currentColor, lineX, lineY)
+            );
+          } catch (error: any) {
+            console.log(this.temporaryPosition, { dx, dy, lineX, lineY, x, y });
+          }
+        }
+      }
+    },
+    drawLine(x: number, y: number) {
+      if (!this.temporaryPosition) return;
+      this.temporaryPosition = null;
+      if (!this.temporaryLayer || !this.currentLayer) return;
+      this.mergeLayer(this.temporaryLayer, this.currentLayer);
+      this.temporaryLayer = null;
+    },
+    mergeLayer(source: Layer, destination: Layer) {
+      destination.merge(source);
     },
   },
 });

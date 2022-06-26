@@ -26,7 +26,9 @@ export class Layer extends Drawable {
     this.isLocked = false;
     this.name = `레이어 ${index}`;
     this.id = index;
-    Layer.index++;
+    if (index >= 0)
+      // -1 레이어는 카운트하지 않도록 하였습니다.
+      Layer.index++;
   }
 
   resize(width: number, height: number) {
@@ -56,7 +58,12 @@ export class Layer extends Drawable {
   }
 
   addPixel(pixel: Pixel) {
-    this.pixels[pixel.y][pixel.x] = pixel;
+    try {
+      this.pixels[pixel.y][pixel.x] = pixel;
+    } catch (error: any) {
+      console.error(pixel);
+      throw new Error("PIXEL CREATION ERROR");
+    }
   }
 
   removePixel(x: number, y: number) {
@@ -69,6 +76,15 @@ export class Layer extends Drawable {
     for (const row of this.pixels) {
       for (const pixel of row) {
         pixel?.render?.(context, scale);
+      }
+    }
+  }
+
+  merge(source: Layer) {
+    for (const row of source.pixels) {
+      for (const pixel of row) {
+        if (!pixel) continue;
+        this.pixels[pixel?.y][pixel?.x] = pixel;
       }
     }
   }

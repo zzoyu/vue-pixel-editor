@@ -19,7 +19,10 @@ const render = debounce(() => {
   // console.log(store.visibleLayerList);
   store.visibleLayerList.forEach((i) => i.render(bufferCtx, store.scale));
   // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  store.temporaryLayer?.render?.(bufferCtx, store.scale);
+
   ctx.canvas.width = ctx.canvas.width;
+
   ctx.drawImage(buffer, 0, 0);
 
   if (store.currentCommand.isDrawable) {
@@ -70,9 +73,9 @@ const handleMouseUp = (event: MouseEvent) => {
   document.removeEventListener("mouseup", handleMouseUp);
 };
 
-const handleClick = (event: MouseEvent) => {
+const handleClick = async (event: MouseEvent) => {
   if (!store.currentLayer?.isVisible || !store.isTotalLayerVisible) return;
-  store.command[store.currentCommandIndex].clickStart?.(
+  await store.command[store.currentCommandIndex].clickStart?.(
     calculateRelativePosition(event)
   );
   document.addEventListener("mousemove", handleMouseMove);
