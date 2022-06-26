@@ -2,6 +2,12 @@
 import { Icon } from "@iconify/vue";
 import { useStore } from "../stores";
 const store = useStore();
+
+const scaleFitToScreen = () => {
+  const targetHeight = document.body.clientHeight - 80;
+  const estimatedScale = Math.round(targetHeight / store.height);
+  store.scale = estimatedScale % 2 ? estimatedScale - 1 : estimatedScale;
+};
 </script>
 
 <template>
@@ -17,6 +23,12 @@ const store = useStore();
       </button>
       <button @click="store.scale--">
         <Icon icon="pixelarticons:zoom-out" />
+      </button>
+      <button @click="scaleFitToScreen">
+        <Icon icon="pixelarticons:aspect-ratio" />
+      </button>
+      <button @click="store.scale = 1">
+        <Icon icon="pixelarticons:layout-distribute-vertical" />
       </button>
     </div>
   </div>
