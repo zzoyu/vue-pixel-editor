@@ -48,11 +48,6 @@ const render = debounce(() => {
   // buffer.remove();
 }, 50);
 
-const zoom = debounce((event: WheelEvent) => {
-  if (event.deltaY < 0) store.scale -= 2;
-  else store.scale += 2;
-}, 5);
-
 const calculateRelativePosition = (
   event: MouseEvent
 ): { x: number; y: number } => {
@@ -95,7 +90,6 @@ onMounted(render);
 
 <template>
   <div
-    @wheel="zoom"
     class="bg-white"
     :class="BackgroundType[store.backgroundType]"
     :width="store.canvasWidth"
