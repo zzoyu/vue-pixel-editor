@@ -18,7 +18,7 @@ const zoom = debounce((event: WheelEvent) => {
     @wheel="zoom"
   >
     <TheToolbar></TheToolbar>
-    <TheCanvas :style="{ cursor: store.currentCommand.cursor }"></TheCanvas>
+    <TheCanvas></TheCanvas>
   </div>
 </template>
 

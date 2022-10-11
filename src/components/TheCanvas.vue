@@ -109,6 +109,11 @@ onMounted(render);
       :width="store.canvasWidth"
       :height="store.canvasHeight"
       class="canvas"
+      :style="
+        !store.currentLayer?.isLocked
+          ? { cursor: store.currentCommand.cursor }
+          : { cursor: 'not-allowed' }
+      "
       :class="{ 'cursor-not-allowed': store.currentLayer?.isLocked }"
     ></canvas>
   </div>
@@ -130,5 +135,19 @@ onMounted(render);
 
 .transparent {
   background: transparent;
+}
+
+.canvas {
+  user-drag: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.cursor-not-allowed {
+  pointer-events: none;
+  cursor: not-allowed;
 }
 </style>
